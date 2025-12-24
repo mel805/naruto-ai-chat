@@ -1,0 +1,202 @@
+package com.narutoai.chat.ui.screens
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.narutoai.chat.data.Characters
+import com.narutoai.chat.models.Character
+import com.narutoai.chat.models.CharacterCategory
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CharacterSelectionScreen(
+    onCharacterSelected: (Character) -> Unit
+) {
+    var selectedCategory by remember { mutableStateOf<CharacterCategory?>(null) }
+    
+    val characters = remember(selectedCategory) {
+        if (selectedCategory == null) {
+            Characters.allCharacters
+        } else {
+            Characters.getByCategory(selectedCategory!!)
+        }
+    }
+    
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Naruto AI Chat",
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                )
+            )
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(16.dp)
+        ) {
+            // Category tabs
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                CategoryChip(
+                    label = "All",
+                    isSelected = selectedCategory == null,
+                    onClick = { selectedCategory = null }
+                )
+                CategoryChip(
+                    label = "Naruto",
+                    isSelected = selectedCategory == CharacterCategory.NARUTO,
+                    onClick = { selectedCategory = CharacterCategory.NARUTO }
+                )
+                CategoryChip(
+                    label = "Celebrities",
+                    isSelected = selectedCategory == CharacterCategory.CELEBRITY_MALE || 
+                               selectedCategory == CharacterCategory.CELEBRITY_FEMALE,
+                    onClick = {
+                        selectedCategory = if (selectedCategory == CharacterCategory.CELEBRITY_MALE) {
+                            CharacterCategory.CELEBRITY_FEMALE
+                        } else {
+                            CharacterCategory.CELEBRITY_MALE
+                        }
+                    }
+                )
+            }
+            
+            Spacer(modifier = Modifier.height(16.dp))
+            
+            // Character list
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(characters) { character ->
+                    CharacterCard(
+                        character = character,
+                        onClick = { onCharacterSelected(character) }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun CategoryChip(
+    label: String,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    Surface(
+        modifier = Modifier
+            .clip(RoundedCornerShape(20.dp))
+            .clickable(onClick = onClick),
+        color = if (isSelected) {
+            MaterialTheme.colorScheme.primary
+        } else {
+            MaterialTheme.colorScheme.surfaceVariant
+        },
+        contentColor = if (isSelected) {
+            MaterialTheme.colorScheme.onPrimary
+        } else {
+            MaterialTheme.colorScheme.onSurfaceVariant
+        }
+    ) {
+        Text(
+            text = label,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            fontWeight = FontWeight.Medium
+        )
+    }
+}
+
+@Composable
+fun CharacterCard(
+    character: Character,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Avatar emoji
+            Box(
+                modifier = Modifier
+                    .size(60.dp)
+                    .clip(RoundedCornerShape(30.dp))
+                    .background(MaterialTheme.colorScheme.primaryContainer),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = character.avatarEmoji,
+                    fontSize = 32.sp
+                )
+            }
+            
+            // Character info
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = character.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = character.description,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                
+                // Personality tags
+                Row(
+                    modifier = Modifier.padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    character.personality.take(3).forEach { trait ->
+                        Surface(
+                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            shape = RoundedCornerShape(4.dp)
+                        ) {
+                            Text(
+                                text = trait,
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSecondaryContainer
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
