@@ -80,7 +80,7 @@ fun ChatScreen(
                                 fontWeight = FontWeight.Bold
                             )
                             Text(
-                                text = if (isNSFWMode) "NSFW Mode" else "SFW Mode",
+                                text = if (isNSFWMode) "Mode NSFW" else "Mode SFW",
                                 style = MaterialTheme.typography.labelSmall,
                                 color = if (isNSFWMode) Color(0xFFFF6B6B) else Color(0xFF4ECDC4)
                             )
@@ -89,7 +89,7 @@ fun ChatScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Retour")
                     }
                 },
                 actions = {
@@ -98,12 +98,12 @@ fun ChatScreen(
                     ) {
                         Icon(
                             if (isNSFWMode) Icons.Default.Lock else Icons.Default.LockOpen,
-                            contentDescription = "Toggle Mode",
+                            contentDescription = "Changer de mode",
                             tint = if (isNSFWMode) Color(0xFFFF6B6B) else MaterialTheme.colorScheme.onSurface
                         )
                     }
                     IconButton(onClick = { viewModel.clearChat() }) {
-                        Icon(Icons.Default.Delete, "Clear chat")
+                        Icon(Icons.Default.Delete, "Effacer la conversation")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -128,7 +128,7 @@ fun ChatScreen(
                         value = inputText,
                         onValueChange = { newText -> inputText = newText },
                         modifier = Modifier.weight(1f),
-                        placeholder = { Text("Type a message...") },
+                        placeholder = { Text("Écris un message...") },
                         enabled = !isLoading,
                         maxLines = 4,
                         shape = RoundedCornerShape(24.dp),
@@ -157,7 +157,7 @@ fun ChatScreen(
                         },
                         enabled = !isLoading && inputText.isNotBlank()
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.Send, "Send")
+                        Icon(Icons.AutoMirrored.Filled.Send, "Envoyer")
                     }
                 }
             }
@@ -219,7 +219,7 @@ fun ChatScreen(
                                         strokeWidth = 2.dp
                                     )
                                     Text(
-                                        text = "${character.name} is typing...",
+                                        text = "${character.name} écrit...",
                                         style = MaterialTheme.typography.bodySmall
                                     )
                                 }
@@ -237,11 +237,11 @@ fun ChatScreen(
                         .padding(16.dp),
                     action = {
                         TextButton(onClick = { viewModel.clearError() }) {
-                            Text("Dismiss")
+                            Text("OK")
                         }
                     }
                 ) {
-                    Text(text = error ?: "Unknown error")
+                    Text(text = error ?: "Erreur inconnue")
                 }
             }
         }
@@ -266,7 +266,7 @@ fun WelcomeCard(character: Character, isNSFWMode: Boolean) {
                 fontSize = 48.sp
             )
             Text(
-                text = "Chat with ${character.name}",
+                text = "Discuter avec ${character.name}",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
@@ -292,7 +292,7 @@ fun WelcomeCard(character: Character, isNSFWMode: Boolean) {
             }
             
             Text(
-                text = "Start the conversation!",
+                text = "Commence la conversation !",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.5f)
             )

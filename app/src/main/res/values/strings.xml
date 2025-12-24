@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Naruto AI Chat</string>
-    <string name="select_character">Select a Character</string>
-    <string name="chat_with">Chat with %1$s</string>
-    <string name="type_message">Type a message...</string>
-    <string name="send">Send</string>
-    <string name="sfw_mode">SFW Mode</string>
-    <string name="nsfw_mode">NSFW Mode</string>
-    <string name="mode_toggle">Toggle Mode</string>
-    <string name="back">Back</string>
-    <string name="connecting">Connecting to AI...</string>
-    <string name="error_connection">Connection error. Please check your internet.</string>
-    <string name="naruto_characters">Naruto Characters</string>
-    <string name="celebrities">Celebrities</string>
-    <string name="all_characters">All Characters</string>
+    <string name="select_character">Choisir un personnage</string>
+    <string name="chat_with">Discuter avec %1$s</string>
+    <string name="type_message">Écris un message...</string>
+    <string name="send">Envoyer</string>
+    <string name="sfw_mode">Mode SFW</string>
+    <string name="nsfw_mode">Mode NSFW</string>
+    <string name="mode_toggle">Changer de mode</string>
+    <string name="back">Retour</string>
+    <string name="connecting">Connexion à l\'IA...</string>
+    <string name="error_connection">Erreur de connexion. Vérifiez votre internet.</string>
+    <string name="naruto_characters">Personnages Naruto</string>
+    <string name="celebrities">Célébrités</string>
+    <string name="all_characters">Tous les personnages</string>
 </resources>

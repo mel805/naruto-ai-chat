@@ -63,7 +63,7 @@ fun CharacterSelectionScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 CategoryChip(
-                    label = "All",
+                    label = "Tous",
                     isSelected = selectedCategory == null,
                     onClick = { selectedCategory = null }
                 )
@@ -73,7 +73,7 @@ fun CharacterSelectionScreen(
                     onClick = { selectedCategory = CharacterCategory.NARUTO }
                 )
                 CategoryChip(
-                    label = "Celebrities",
+                    label = "Célébrités",
                     isSelected = selectedCategory == CharacterCategory.CELEBRITY_MALE || 
                                selectedCategory == CharacterCategory.CELEBRITY_FEMALE,
                     onClick = {
