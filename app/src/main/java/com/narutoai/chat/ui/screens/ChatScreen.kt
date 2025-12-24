@@ -16,9 +16,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import coil.compose.AsyncImage
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -161,6 +164,16 @@ fun ChatScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
+            // Image de fond du personnage (semi-transparente)
+            AsyncImage(
+                model = character.imageUrl,
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .alpha(0.15f), // Très transparent pour ne pas gêner la lecture
+                contentScale = ContentScale.Crop
+            )
+            
             // Messages list
             LazyColumn(
                 state = listState,
@@ -295,9 +308,9 @@ fun MessageBubble(message: ChatMessage, character: Character) {
                 bottomEnd = if (message.isUser) 4.dp else 16.dp
             ),
             color = if (message.isUser) {
-                MaterialTheme.colorScheme.primaryContainer
+                MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f) // Transparent
             } else {
-                MaterialTheme.colorScheme.secondaryContainer
+                MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.8f) // Transparent
             },
             modifier = Modifier.widthIn(max = 280.dp)
         ) {
