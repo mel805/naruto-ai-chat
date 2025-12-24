@@ -150,27 +150,18 @@ fun CharacterCard(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Avatar image
+            // Avatar avec emoji (toujours affiché)
             Box(
                 modifier = Modifier
                     .size(80.dp)
                     .clip(RoundedCornerShape(12.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                    .background(MaterialTheme.colorScheme.primaryContainer),
                 contentAlignment = Alignment.Center
             ) {
-                if (character.imageResId != 0) {
-                    AsyncImage(
-                        model = character.imageResId,
-                        contentDescription = character.name,
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Fit
-                    )
-                } else {
-                    Text(
-                        text = character.avatarEmoji,
-                        fontSize = 40.sp
-                    )
-                }
+                Text(
+                    text = character.avatarEmoji,
+                    fontSize = 40.sp
+                )
             }
             
             // Character info
