@@ -9,7 +9,8 @@ data class Character(
     val systemPromptNSFW: String,
     val avatarEmoji: String,
     val personality: List<String>,
-    val imageUrl: String = "" // URL de l'image du personnage
+    val imageUrl: String = "", // URL de l'image (non utilisée)
+    val imageResId: Int = 0 // Ressource drawable locale
 )
 
 enum class CharacterCategory {

@@ -158,12 +158,12 @@ fun CharacterCard(
                     .background(MaterialTheme.colorScheme.surfaceVariant),
                 contentAlignment = Alignment.Center
             ) {
-                if (character.imageUrl.isNotEmpty()) {
+                if (character.imageResId != 0) {
                     AsyncImage(
-                        model = character.imageUrl,
+                        model = character.imageResId,
                         contentDescription = character.name,
                         modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
+                        contentScale = ContentScale.Fit
                     )
                 } else {
                     Text(
