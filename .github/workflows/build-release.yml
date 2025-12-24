@@ -37,6 +37,13 @@ jobs:
           VERSION="${{ github.event.inputs.version || github.ref_name }}"
           mv app/build/outputs/apk/release/app-release-unsigned.apk "Naruto-AI-Chat-${VERSION}.apk"
       
+      - name: Upload APK as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: naruto-ai-chat-apk
+          path: Naruto-AI-Chat-${{ github.event.inputs.version || github.ref_name }}.apk
+          retention-days: 30
+      
       - name: Create Release with gh CLI
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
