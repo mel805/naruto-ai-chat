@@ -42,27 +42,31 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VERSION="${{ github.event.inputs.version || github.ref_name }}"
+          cat > release_notes.md << 'NOTES'
+          ## Naruto AI Chat - Release $VERSION
+          
+          ### ✨ Features:
+          - 🍜 13 personnages (6 Naruto + 7 célébrités)
+          - 🔓 Modes SFW et NSFW  
+          - 🤖 TinyLlama 1.1B sur Freebox (88.174.155.230:11434)
+          - 💯 100% GRATUIT & ILLIMITÉ
+          - 🎨 Material Design 3 UI
+          
+          ### 📱 Installation:
+          1. Télécharger l'APK
+          2. Installer sur Android 8.0+
+          3. Utiliser (déjà configuré pour Freebox!)
+          
+          ### 🔗 Backend:
+          - URL: http://88.174.155.230:11434
+          - Modèle: TinyLlama 1.1B
+          - Pas de clé API nécessaire
+          
+          Dattebayo! 🍜
+          NOTES
+          sed -i "s/\$VERSION/${VERSION}/g" release_notes.md
           gh release create "${VERSION}" \
             --repo ${{ github.repository }} \
             --title "Naruto AI Chat ${VERSION}" \
-            --notes "## Naruto AI Chat - Release ${VERSION}
-
-### ✨ Features:
-- 🍜 13 personnages (6 Naruto + 7 célébrités)
-- 🔓 Modes SFW et NSFW
-- 🤖 TinyLlama 1.1B sur Freebox (88.174.155.230:11434)
-- 💯 100% GRATUIT & ILLIMITÉ
-- 🎨 Material Design 3 UI
-
-### 📱 Installation:
-1. Télécharger l'APK
-2. Installer sur Android 8.0+
-3. Utiliser (déjà configuré pour Freebox!)
-
-### 🔗 Backend:
-- URL: http://88.174.155.230:11434
-- Modèle: TinyLlama 1.1B
-- Pas de clé API nécessaire
-
-Dattebayo! 🍜" \
+            --notes-file release_notes.md \
             "Naruto-AI-Chat-${VERSION}.apk"
