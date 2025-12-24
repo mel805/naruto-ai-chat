@@ -21,6 +21,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import coil.compose.AsyncImage
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -326,7 +330,11 @@ fun MessageBubble(message: ChatMessage, character: Character) {
                 }
                 
                 Text(
-                    text = message.content,
+                    text = if (message.isUser) {
+                        AnnotatedString(message.content)
+                    } else {
+                        formatRoleplayText(message.content)
+                    },
                     style = MaterialTheme.typography.bodyMedium,
                     color = if (message.isUser) {
                         MaterialTheme.colorScheme.onPrimaryContainer
@@ -335,6 +343,59 @@ fun MessageBubble(message: ChatMessage, character: Character) {
                     }
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun formatRoleplayText(text: String): AnnotatedString {
+    return buildAnnotatedString {
+        var currentIndex = 0
+        val dialogueRegex = Regex("\"([^\"]+)\"")
+        val actionRegex = Regex("\\*([^*]+)\\*")
+        val thoughtRegex = Regex("\\(([^)]+)\\)")
+        
+        // Trouver tous les matches
+        val dialogueMatches = dialogueRegex.findAll(text).toList()
+        val actionMatches = actionRegex.findAll(text).toList()
+        val thoughtMatches = thoughtRegex.findAll(text).toList()
+        
+        // Combiner et trier tous les matches par position
+        val allMatches = (dialogueMatches + actionMatches + thoughtMatches)
+            .sortedBy { it.range.first }
+        
+        allMatches.forEach { match ->
+            // Ajouter le texte avant le match (texte normal)
+            if (currentIndex < match.range.first) {
+                append(text.substring(currentIndex, match.range.first))
+            }
+            
+            // Ajouter le match avec style
+            when {
+                match in dialogueMatches -> {
+                    // Dialogue en blanc (couleur normale)
+                    append(match.value)
+                }
+                match in actionMatches -> {
+                    // Actions en orange/jaune
+                    withStyle(style = SpanStyle(color = Color(0xFFFFB347))) {
+                        append(match.value)
+                    }
+                }
+                match in thoughtMatches -> {
+                    // Pensées en gris/bleu clair italique
+                    withStyle(style = SpanStyle(color = Color(0xFF9DB4C0), fontStyle = androidx.compose.ui.text.font.FontStyle.Italic)) {
+                        append(match.value)
+                    }
+                }
+            }
+            
+            currentIndex = match.range.last + 1
+        }
+        
+        // Ajouter le reste du texte
+        if (currentIndex < text.length) {
+            append(text.substring(currentIndex))
         }
     }
 }
