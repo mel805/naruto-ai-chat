@@ -12,7 +12,7 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 class LlamaClient(
-    private val baseUrl: String = "http://88.174.155.230:11434" // Freebox TinyLlama
+    private val baseUrl: String = "http://88.174.155.230:33437" // Freebox TinyLlama
 ) {
     
     private val client = OkHttpClient.Builder()
