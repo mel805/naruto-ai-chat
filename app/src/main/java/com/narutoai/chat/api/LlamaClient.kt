@@ -12,8 +12,10 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 class LlamaClient(
-    private val baseUrl: String = "http://ORACLE-CLOUD-IP:11434" // À configurer
+    private val apiKey: String = "YOUR_GROQ_API_KEY" // À configurer dans Settings
 ) {
+    
+    private val baseUrl = "https://api.groq.com/openai/v1"
     
     private val client = OkHttpClient.Builder()
         .connectTimeout(30, TimeUnit.SECONDS)
@@ -57,15 +59,17 @@ class LlamaClient(
             })
             
             val jsonBody = JSONObject().apply {
-                put("model", "llama3.2:3b") // ou llama3:8b selon votre Oracle Cloud
+                put("model", "llama-3.3-70b-versatile") // Groq's fastest uncensored model
                 put("messages", messages)
                 put("temperature", 0.8)
-                put("max_tokens", 500)
+                put("max_tokens", 1000)
                 put("stream", false)
             }
             
             val request = Request.Builder()
-                .url("$baseUrl/v1/chat/completions")
+                .url("$baseUrl/chat/completions")
+                .addHeader("Authorization", "Bearer $apiKey")
+                .addHeader("Content-Type", "application/json")
                 .post(jsonBody.toString().toRequestBody("application/json".toMediaType()))
                 .build()
             
@@ -99,7 +103,8 @@ class LlamaClient(
     suspend fun ping(): Result<Boolean> = withContext(Dispatchers.IO) {
         try {
             val request = Request.Builder()
-                .url("$baseUrl/health")
+                .url("$baseUrl/models")
+                .addHeader("Authorization", "Bearer $apiKey")
                 .get()
                 .build()
             
