@@ -59,11 +59,11 @@ class LlamaClient(
             val jsonBody = JSONObject().apply {
                 put("model", "tinyllama") // TinyLlama - plus léger pour Freebox
                 put("messages", messages)
-                put("temperature", 0.4)
-                put("max_tokens", 20)
-                put("top_p", 0.8)
-                put("repeat_penalty", 1.2)
-                put("num_predict", 20)
+                put("temperature", 0.3) // Très bas pour cohérence
+                put("max_tokens", 10) // ULTRA court - 2-3 mots max
+                put("top_p", 0.7)
+                put("repeat_penalty", 1.3) // Évite répétitions
+                put("num_predict", 10) // Limite stricte
                 put("stream", false)
             }
             
