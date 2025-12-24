@@ -171,7 +171,7 @@ Itachi: ..."""
         id = "brad",
         name = "Brad Pitt",
         description = "L'acteur hollywoodien légendaire",
-        category = CharacterCategory.CELEBRITY,
+        category = CharacterCategory.CELEBRITY_MALE,
         avatarEmoji = "🎬",
         imageResId = R.drawable.brad,
         personality = listOf("charmant", "talentueux", "charismatique"),
@@ -198,7 +198,7 @@ Brad Pitt: *rit* Merci !"""
         id = "leo",
         name = "Leonardo DiCaprio",
         description = "L'acteur oscarisé",
-        category = CharacterCategory.CELEBRITY,
+        category = CharacterCategory.CELEBRITY_MALE,
         avatarEmoji = "🌊",
         imageResId = R.drawable.leo,
         personality = listOf("passionné", "engagé", "talentueux"),
@@ -225,7 +225,7 @@ Leonardo DiCaprio: *rit* Merci !"""
         id = "rock",
         name = "Dwayne Johnson",
         description = "The Rock, acteur et catcheur",
-        category = CharacterCategory.CELEBRITY,
+        category = CharacterCategory.CELEBRITY_MALE,
         avatarEmoji = "💪",
         imageResId = R.drawable.rock,
         personality = listOf("énergique", "motivant", "fort", "charismatique"),
@@ -252,7 +252,7 @@ Dwayne Johnson: *flex* Oh yeah !"""
         id = "scarlett",
         name = "Scarlett Johansson",
         description = "L'actrice talentueuse et charismatique",
-        category = CharacterCategory.CELEBRITY,
+        category = CharacterCategory.CELEBRITY_FEMALE,
         avatarEmoji = "🕷️",
         imageResId = R.drawable.scarlett,
         personality = listOf("talentueuse", "charismatique", "forte"),
@@ -279,7 +279,7 @@ Scarlett Johansson: *rit* Merci !"""
         id = "margot",
         name = "Margot Robbie",
         description = "L'actrice australienne pétillante",
-        category = CharacterCategory.CELEBRITY,
+        category = CharacterCategory.CELEBRITY_FEMALE,
         avatarEmoji = "💎",
         imageResId = R.drawable.margot,
         personality = listOf("pétillante", "talentueuse", "fun"),
@@ -306,7 +306,7 @@ Margot Robbie: *rit* Merci !"""
         id = "emma",
         name = "Emma Watson",
         description = "L'actrice britannique engagée",
-        category = CharacterCategory.CELEBRITY,
+        category = CharacterCategory.CELEBRITY_FEMALE,
         avatarEmoji = "📚",
         imageResId = R.drawable.emma,
         personality = listOf("intelligente", "engagée", "élégante"),
@@ -333,7 +333,7 @@ Emma Watson: Merci !"""
         id = "zendaya",
         name = "Zendaya",
         description = "L'actrice et chanteuse talentueuse",
-        category = CharacterCategory.CELEBRITY,
+        category = CharacterCategory.CELEBRITY_FEMALE,
         avatarEmoji = "✨",
         imageResId = R.drawable.zendaya,
         personality = listOf("talentueuse", "charismatique", "moderne"),
@@ -360,4 +360,8 @@ Zendaya: Merci beaucoup !"""
         naruto, sasuke, sakura, kakashi, hinata, itachi,
         bradPitt, leoDiCaprio, theRock, scarlett, margot, emma, zendaya
     )
+    
+    fun getByCategory(category: CharacterCategory): List<Character> {
+        return allCharacters.filter { it.category == category }
+    }
 }
