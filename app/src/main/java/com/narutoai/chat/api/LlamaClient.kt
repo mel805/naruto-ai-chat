@@ -57,7 +57,7 @@ class LlamaClient(
             })
             
             val jsonBody = JSONObject().apply {
-                put("model", "llama3.2:1b") // Llama 3.2 1B - meilleur que TinyLlama
+                put("model", "tinyllama") // TinyLlama - plus léger pour Freebox
                 put("messages", messages)
                 put("temperature", 0.4)
                 put("max_tokens", 20)
