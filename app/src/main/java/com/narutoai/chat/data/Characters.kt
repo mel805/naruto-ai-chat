@@ -14,7 +14,7 @@ object Characters {
         description = "The hyperactive ninja who never gives up",
         category = CharacterCategory.NARUTO,
         avatarEmoji = "🍜",
-        imageResId = R.drawable.naruto_photo,
+        imageResId = R.drawable.naruto,
         personality = listOf("energetic", "optimistic", "determined", "loyal", "never gives up"),
         systemPromptSFW = """Naruto Uzumaki. Réponds en français, 5 mots max.
 
@@ -50,7 +50,7 @@ Reste en caractère mais cohérent !"""
         description = "The cool and powerful Uchiha prodigy",
         category = CharacterCategory.NARUTO,
         avatarEmoji = "⚡",
-        imageResId = R.drawable.sasuke_photo,
+        imageResId = R.drawable.sasuke,
         personality = listOf("cool", "serious", "powerful", "mysterious", "driven by revenge"),
         systemPromptSFW = """Sasuke Uchiha. Réponds en français, 3 mots max.
 
@@ -80,7 +80,7 @@ Mystérieux, passionné, dominant, intense."""
         description = "The intelligent and strong kunoichi",
         category = CharacterCategory.NARUTO,
         avatarEmoji = "🌸",
-        imageResId = R.drawable.sakura_photo,
+        imageResId = R.drawable.sakura,
         personality = listOf("intelligent", "strong", "caring", "determined", "medical expert"),
         systemPromptSFW = """Tu es Sakura Haruno. Réponds UNIQUEMENT en français.
 
@@ -111,7 +111,7 @@ Forte, féminine, confiante, pas timide."""
         description = "The cool and mysterious Copy Ninja",
         category = CharacterCategory.NARUTO,
         avatarEmoji = "📖",
-        imageResId = R.drawable.kakashi_photo,
+        imageResId = R.drawable.kakashi,
         personality = listOf("calm", "intelligent", "mysterious", "protective", "late"),
         systemPromptSFW = """Tu es Kakashi Hatake. Réponds UNIQUEMENT en français.
 
@@ -141,7 +141,7 @@ Expérimenté (merci Icha Icha), smooth, confiant."""
         description = "The shy but determined Hyuga heiress",
         category = CharacterCategory.NARUTO,
         avatarEmoji = "💜",
-        imageResId = R.drawable.hinata_photo,
+        imageResId = R.drawable.hinata,
         personality = listOf("shy", "kind", "determined", "loyal", "gentle"),
         systemPromptSFW = """Tu es Hinata Hyuga. Réponds UNIQUEMENT en français.
 
@@ -171,7 +171,7 @@ Timide mais surprenante, aimante, audacieuse en intime."""
         description = "The mysterious and powerful Uchiha genius",
         category = CharacterCategory.NARUTO,
         avatarEmoji = "🌙",
-        imageResId = R.drawable.itachi_photo,
+        imageResId = R.drawable.itachi,
         personality = listOf("calm", "intelligent", "mysterious", "protective", "tragic"),
         systemPromptSFW = """Tu es Itachi Uchiha. Réponds UNIQUEMENT en français.
 
@@ -203,7 +203,7 @@ Calme mais passionné, tantôt doux tantôt dominant."""
         description = "Hollywood icon and charismatic actor",
         category = CharacterCategory.CELEBRITY_MALE,
         avatarEmoji = "🎬",
-        imageResId = R.drawable.brad_photo,
+        imageResId = R.drawable.brad,
         personality = listOf("charismatic", "confident", "charming", "talented", "down-to-earth"),
         systemPromptSFW = """Tu es Brad Pitt. Réponds UNIQUEMENT en français.
 
@@ -233,7 +233,7 @@ Expérimenté, sensuel, smooth, passionné."""
         description = "Academy Award-winning actor and environmental activist",
         category = CharacterCategory.CELEBRITY_MALE,
         avatarEmoji = "🌊",
-        imageResId = R.drawable.leo_photo,
+        imageResId = R.drawable.leo,
         personality = listOf("talented", "passionate", "environmental", "charismatic", "intense"),
         systemPromptSFW = """Tu es Leonardo DiCaprio, acteur oscarisé.
 Réponds en français, 1-2 phrases MAX, style roleplay passionné.
@@ -255,7 +255,7 @@ Confiant, expérimenté, romantique, sensuel."""
         description = "Charismatic actor and former WWE champion",
         category = CharacterCategory.CELEBRITY_MALE,
         avatarEmoji = "💪",
-        imageResId = R.drawable.rock_photo,
+        imageResId = R.drawable.rock,
         personality = listOf("charismatic", "confident", "hardworking", "funny", "inspiring"),
         systemPromptSFW = """Tu es Dwayne 'The Rock' Johnson, le Champion du Peuple.
 Réponds en français, 1-2 phrases MAX, style roleplay énergique.
@@ -279,7 +279,7 @@ Puissant, dominant, joueur, passionné."""
         description = "Talented actress and Marvel's Black Widow",
         category = CharacterCategory.CELEBRITY_FEMALE,
         avatarEmoji = "🕷️",
-        imageResId = R.drawable.scarlett_photo,
+        imageResId = R.drawable.scarlett,
         personality = listOf("confident", "talented", "intelligent", "sultry", "badass"),
         systemPromptSFW = """Tu es Scarlett Johansson, actrice acclamée.
 Réponds en français, 1-2 phrases MAX, style roleplay sophistiqué.
@@ -301,7 +301,7 @@ Expérimentée, confiante, joueuse, passionnée."""
         description = "Australian actress and producer",
         category = CharacterCategory.CELEBRITY_FEMALE,
         avatarEmoji = "💎",
-        imageResId = R.drawable.margot_photo,
+        imageResId = R.drawable.margot,
         personality = listOf("charming", "funny", "talented", "down-to-earth", "confident"),
         systemPromptSFW = """Tu es Margot Robbie, l'actrice australienne talentueuse.
 Réponds en français, 1-2 phrases MAX, style roleplay charmant.
@@ -323,7 +323,7 @@ Confiante, fun, douce et coquine."""
         description = "Actress, activist, and women's rights advocate",
         category = CharacterCategory.CELEBRITY_FEMALE,
         avatarEmoji = "📚",
-        imageResId = R.drawable.emma_photo,
+        imageResId = R.drawable.emma,
         personality = listOf("intelligent", "passionate", "elegant", "activist", "articulate"),
         systemPromptSFW = """Tu es Emma Watson, actrice et ambassadrice ONU Femmes.
 Réponds en français, 1-2 phrases MAX, style roleplay élégant.
@@ -345,7 +345,7 @@ Intelligente, confiante, élégante mais coquine."""
         description = "Multi-talented actress, singer, and fashion icon",
         category = CharacterCategory.CELEBRITY_FEMALE,
         avatarEmoji = "✨",
-        imageResId = R.drawable.zendaya_photo,
+        imageResId = R.drawable.zendaya,
         personality = listOf("confident", "talented", "fashionable", "cool", "down-to-earth"),
         systemPromptSFW = """Tu es Zendaya, l'actrice multi-talentueuse et icône de mode.
 Réponds en français, 1-2 phrases MAX, style roleplay cool.
