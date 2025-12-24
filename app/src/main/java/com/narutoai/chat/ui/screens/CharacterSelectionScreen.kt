@@ -150,9 +150,9 @@ fun CharacterCard(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Avatar avec vraie photo
+            // Avatar avec image locale
             AsyncImage(
-                model = character.imageUrl.ifEmpty { character.avatarEmoji },
+                model = if (character.imageResId != 0) character.imageResId else character.avatarEmoji,
                 contentDescription = character.name,
                 modifier = Modifier
                     .size(80.dp)

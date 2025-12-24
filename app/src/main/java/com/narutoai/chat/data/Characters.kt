@@ -14,8 +14,7 @@ object Characters {
         description = "The hyperactive ninja who never gives up",
         category = CharacterCategory.NARUTO,
         avatarEmoji = "🍜",
-        imageUrl = "https://picsum.photos/seed/naruto/400/400", // Photo placeholder
-        imageResId = R.drawable.ic_naruto,
+        imageResId = R.drawable.naruto_photo,
         personality = listOf("energetic", "optimistic", "determined", "loyal", "never gives up"),
         systemPromptSFW = """Tu es Naruto Uzumaki, le ninja hyperactif de Konoha.
 Réponds TOUJOURS en français, 1-2 phrases MAX, style roleplay immersif.
@@ -27,7 +26,7 @@ FORMAT OBLIGATOIRE:
 
 EXEMPLE: *se gratte la tête* "Eh ! Ça te dit un bol de ramens ?" (J'ai trop faim, dattebayo !)
 
-Personnalité: énergique, optimiste, dit "Dattebayo!" parfois. Sois court et naturel !"""
+Personnalité: énergique, optimiste, dit "Dattebayo!" parfois. Sois court et naturel !""",
         systemPromptNSFW = """Tu es Naruto Uzumaki en mode adulte non censuré.
 Réponds en français, 1-2 phrases MAX, style roleplay hot.
 
@@ -43,8 +42,7 @@ Confiant, charmant, direct sur les sujets adultes. Pas timide !"""
         description = "The cool and powerful Uchiha prodigy",
         category = CharacterCategory.NARUTO,
         avatarEmoji = "⚡",
-        imageUrl = "https://picsum.photos/seed/sasuke/400/400", // Photo placeholder
-        imageResId = R.drawable.ic_sasuke,
+        imageResId = R.drawable.sasuke_photo,
         personality = listOf("cool", "serious", "powerful", "mysterious", "driven by revenge"),
         systemPromptSFW = """Tu es Sasuke Uchiha, le dernier Uchiha.
 Réponds en français, 1 phrase MAX, style roleplay froid.
@@ -68,8 +66,7 @@ Mystérieux, passionné, dominant, intense."""
         description = "The intelligent and strong kunoichi",
         category = CharacterCategory.NARUTO,
         avatarEmoji = "🌸",
-        imageUrl = "https://picsum.photos/seed/sakura/400/400", // Photo placeholder
-        imageResId = R.drawable.ic_sakura,
+        imageResId = R.drawable.sakura_photo,
         personality = listOf("intelligent", "strong", "caring", "determined", "medical expert"),
         systemPromptSFW = """Tu es Sakura Haruno, la ninja médicale talentueuse.
 Réponds en français, 1-2 phrases MAX, style roleplay.
@@ -91,8 +88,7 @@ Forte, féminine, confiante, pas timide."""
         description = "The cool and mysterious Copy Ninja",
         category = CharacterCategory.NARUTO,
         avatarEmoji = "📖",
-        imageUrl = "https://picsum.photos/seed/kakashi/400/400", // Photo placeholder
-        imageResId = R.drawable.ic_kakashi,
+        imageResId = R.drawable.kakashi_photo,
         personality = listOf("calm", "intelligent", "mysterious", "protective", "late"),
         systemPromptSFW = """Tu es Kakashi Hatake, le Copy Ninja.
 Réponds en français, 1-2 phrases MAX, style roleplay.
@@ -114,8 +110,7 @@ Expérimenté (merci Icha Icha), smooth, confiant."""
         description = "The shy but determined Hyuga heiress",
         category = CharacterCategory.NARUTO,
         avatarEmoji = "💜",
-        imageUrl = "https://picsum.photos/seed/hinata/400/400", // Photo placeholder
-        imageResId = R.drawable.ic_hinata,
+        imageResId = R.drawable.hinata_photo,
         personality = listOf("shy", "kind", "determined", "loyal", "gentle"),
         systemPromptSFW = """Tu es Hinata Hyuga, la douce héritière Hyuga.
 Réponds en français, 1-2 phrases MAX, style roleplay timide.
@@ -137,8 +132,7 @@ Timide mais surprenante, aimante, audacieuse en intime."""
         description = "The mysterious and powerful Uchiha genius",
         category = CharacterCategory.NARUTO,
         avatarEmoji = "🌙",
-        imageUrl = "https://picsum.photos/seed/itachi/400/400", // Photo placeholder
-        imageResId = R.drawable.ic_itachi,
+        imageResId = R.drawable.itachi_photo,
         personality = listOf("calm", "intelligent", "mysterious", "protective", "tragic"),
         systemPromptSFW = """Tu es Itachi Uchiha, le génie tragique du clan Uchiha.
 Réponds en français, 1 phrase MAX, style roleplay philosophique.
@@ -162,8 +156,7 @@ Calme mais passionné, tantôt doux tantôt dominant."""
         description = "Hollywood icon and charismatic actor",
         category = CharacterCategory.CELEBRITY_MALE,
         avatarEmoji = "🎬",
-        imageUrl = "https://picsum.photos/seed/bradpitt/400/400", // Photo placeholder
-        imageResId = R.drawable.ic_brad_pitt,
+        imageResId = R.drawable.brad_photo,
         personality = listOf("charismatic", "confident", "charming", "talented", "down-to-earth"),
         systemPromptSFW = """Tu es Brad Pitt, la légende d'Hollywood.
 Réponds en français, 1-2 phrases MAX, style roleplay charismatique.
@@ -185,8 +178,7 @@ Expérimenté, sensuel, smooth, passionné."""
         description = "Academy Award-winning actor and environmental activist",
         category = CharacterCategory.CELEBRITY_MALE,
         avatarEmoji = "🌊",
-        imageUrl = "https://picsum.photos/seed/leonardo/400/400", // Photo placeholder
-        imageResId = R.drawable.ic_leonardo,
+        imageResId = R.drawable.leo_photo,
         personality = listOf("talented", "passionate", "environmental", "charismatic", "intense"),
         systemPromptSFW = """Tu es Leonardo DiCaprio, acteur oscarisé.
 Réponds en français, 1-2 phrases MAX, style roleplay passionné.
@@ -208,8 +200,7 @@ Confiant, expérimenté, romantique, sensuel."""
         description = "Charismatic actor and former WWE champion",
         category = CharacterCategory.CELEBRITY_MALE,
         avatarEmoji = "💪",
-        imageUrl = "https://picsum.photos/seed/therock/400/400", // Photo placeholder
-        imageResId = R.drawable.ic_the_rock,
+        imageResId = R.drawable.rock_photo,
         personality = listOf("charismatic", "confident", "hardworking", "funny", "inspiring"),
         systemPromptSFW = """Tu es Dwayne 'The Rock' Johnson, le Champion du Peuple.
 Réponds en français, 1-2 phrases MAX, style roleplay énergique.
@@ -233,8 +224,7 @@ Puissant, dominant, joueur, passionné."""
         description = "Talented actress and Marvel's Black Widow",
         category = CharacterCategory.CELEBRITY_FEMALE,
         avatarEmoji = "🕷️",
-        imageUrl = "https://picsum.photos/seed/scarlett/400/400", // Photo placeholder
-        imageResId = R.drawable.ic_scarlett,
+        imageResId = R.drawable.scarlett_photo,
         personality = listOf("confident", "talented", "intelligent", "sultry", "badass"),
         systemPromptSFW = """Tu es Scarlett Johansson, actrice acclamée.
 Réponds en français, 1-2 phrases MAX, style roleplay sophistiqué.
@@ -256,8 +246,7 @@ Expérimentée, confiante, joueuse, passionnée."""
         description = "Australian actress and producer",
         category = CharacterCategory.CELEBRITY_FEMALE,
         avatarEmoji = "💎",
-        imageUrl = "https://picsum.photos/seed/margot/400/400", // Photo placeholder
-        imageResId = R.drawable.ic_margot,
+        imageResId = R.drawable.margot_photo,
         personality = listOf("charming", "funny", "talented", "down-to-earth", "confident"),
         systemPromptSFW = """Tu es Margot Robbie, l'actrice australienne talentueuse.
 Réponds en français, 1-2 phrases MAX, style roleplay charmant.
@@ -279,8 +268,7 @@ Confiante, fun, douce et coquine."""
         description = "Actress, activist, and women's rights advocate",
         category = CharacterCategory.CELEBRITY_FEMALE,
         avatarEmoji = "📚",
-        imageUrl = "https://picsum.photos/seed/emma/400/400", // Photo placeholder
-        imageResId = R.drawable.ic_emma,
+        imageResId = R.drawable.emma_photo,
         personality = listOf("intelligent", "passionate", "elegant", "activist", "articulate"),
         systemPromptSFW = """Tu es Emma Watson, actrice et ambassadrice ONU Femmes.
 Réponds en français, 1-2 phrases MAX, style roleplay élégant.
@@ -302,8 +290,7 @@ Intelligente, confiante, élégante mais coquine."""
         description = "Multi-talented actress, singer, and fashion icon",
         category = CharacterCategory.CELEBRITY_FEMALE,
         avatarEmoji = "✨",
-        imageUrl = "https://picsum.photos/seed/zendaya/400/400", // Photo placeholder
-        imageResId = R.drawable.ic_zendaya,
+        imageResId = R.drawable.zendaya_photo,
         personality = listOf("confident", "talented", "fashionable", "cool", "down-to-earth"),
         systemPromptSFW = """Tu es Zendaya, l'actrice multi-talentueuse et icône de mode.
 Réponds en français, 1-2 phrases MAX, style roleplay cool.

@@ -169,14 +169,16 @@ fun ChatScreen(
                 .padding(padding)
         ) {
             // Image de fond du personnage (semi-transparente)
-            AsyncImage(
-                model = character.imageUrl,
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .alpha(0.15f), // Très transparent pour ne pas gêner la lecture
-                contentScale = ContentScale.Crop
-            )
+            if (character.imageResId != 0) {
+                AsyncImage(
+                    model = character.imageResId,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .alpha(0.15f), // Très transparent pour ne pas gêner la lecture
+                    contentScale = ContentScale.Crop
+                )
+            }
             
             // Messages list
             LazyColumn(
