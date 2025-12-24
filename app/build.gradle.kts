@@ -20,6 +20,15 @@ android {
         }
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("naruto-debug.keystore")
+            storePassword = "narutoai123"
+            keyAlias = "naruto-ai"
+            keyPassword = "narutoai123"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -27,6 +36,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     
