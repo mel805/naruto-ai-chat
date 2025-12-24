@@ -32,22 +32,10 @@ jobs:
       - name: Build Release APK
         run: ./gradlew assembleRelease
       
-      - name: Sign APK
-        uses: r0adkll/sign-android-release@v1
-        id: sign_app
-        with:
-          releaseDirectory: app/build/outputs/apk/release
-          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-          alias: ${{ secrets.ALIAS }}
-          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
-        env:
-          BUILD_TOOLS_VERSION: "34.0.0"
-      
       - name: Rename APK
         run: |
           VERSION="${{ github.event.inputs.version || github.ref_name }}"
-          mv app/build/outputs/apk/release/app-release-unsigned-signed.apk "Naruto-AI-Chat-v${VERSION}.apk"
+          mv app/build/outputs/apk/release/app-release-unsigned.apk "Naruto-AI-Chat-v${VERSION}.apk"
       
       - name: Create Release
         id: create_release
