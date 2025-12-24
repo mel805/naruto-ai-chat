@@ -16,9 +16,9 @@ class LlamaClient(
 ) {
     
     private val client = OkHttpClient.Builder()
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(120, TimeUnit.SECONDS)
-        .writeTimeout(30, TimeUnit.SECONDS)
+        .connectTimeout(45, TimeUnit.SECONDS)
+        .readTimeout(180, TimeUnit.SECONDS) // 3 minutes pour Freebox lente
+        .writeTimeout(45, TimeUnit.SECONDS)
         .build()
     
     /**
@@ -42,8 +42,8 @@ class LlamaClient(
                 put("content", systemPrompt)
             })
             
-            // Add conversation history (last 10 messages for context)
-            conversationHistory.takeLast(10).forEach { (role, content) ->
+            // Add conversation history (last 3 messages only for speed)
+            conversationHistory.takeLast(3).forEach { (role, content) ->
                 messages.put(JSONObject().apply {
                     put("role", role)
                     put("content", content)
@@ -59,10 +59,11 @@ class LlamaClient(
             val jsonBody = JSONObject().apply {
                 put("model", "tinyllama") // TinyLlama 1.1B on Freebox
                 put("messages", messages)
-                put("temperature", 0.8) // Équilibre cohérence/créativité
-                put("max_tokens", 120) // Assez pour 2-4 phrases cohérentes
-                put("top_p", 0.95)
-                put("repeat_penalty", 1.1) // Évite les répétitions
+                put("temperature", 0.7) // Plus bas = plus rapide
+                put("max_tokens", 50) // Ultra-court pour vitesse maximale
+                put("top_p", 0.9) // Réduit pour accélérer
+                put("repeat_penalty", 1.15) // Évite répétitions
+                put("num_predict", 50) // Limite stricte
                 put("stream", false)
             }
             
