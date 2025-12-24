@@ -35,7 +35,8 @@ jobs:
       - name: Rename APK
         run: |
           VERSION="${{ github.event.inputs.version || github.ref_name }}"
-          mv app/build/outputs/apk/release/app-release-unsigned.apk "Naruto-AI-Chat-${VERSION}.apk"
+          # APK is now signed, so it's called app-release.apk (not unsigned)
+          mv app/build/outputs/apk/release/app-release.apk "Naruto-AI-Chat-${VERSION}.apk"
       
       - name: Upload APK as Artifact
         uses: actions/upload-artifact@v4
