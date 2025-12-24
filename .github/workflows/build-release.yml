@@ -35,53 +35,34 @@ jobs:
       - name: Rename APK
         run: |
           VERSION="${{ github.event.inputs.version || github.ref_name }}"
-          mv app/build/outputs/apk/release/app-release-unsigned.apk "Naruto-AI-Chat-v${VERSION}.apk"
+          mv app/build/outputs/apk/release/app-release-unsigned.apk "Naruto-AI-Chat-${VERSION}.apk"
       
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Create Release with gh CLI
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.event.inputs.version && format('v{0}', github.event.inputs.version) || github.ref }}
-          release_name: Naruto AI Chat ${{ github.event.inputs.version || github.ref_name }}
-          body: |
-            ## Naruto AI Chat - Release ${{ github.event.inputs.version || github.ref_name }}
-            
-            ### Features:
-            - 🍜 Chat with Naruto characters (Naruto, Sasuke, Sakura, Kakashi, Hinata, Itachi)
-            - ⭐ Chat with celebrities (Brad Pitt, Leonardo DiCaprio, The Rock, Scarlett Johansson, Margot Robbie, Emma Watson, Zendaya)
-            - 🔓 SFW and NSFW modes
-            - 💬 Realistic personalities based on characters
-            - 🎨 Beautiful Material Design 3 UI
-            
-            ### Requirements:
-            - Android 8.0 (API 26) or higher
-            - Internet connection
-            - Oracle Cloud VM with Llama 3.2 running
-            
-            ### Installation:
-            1. Download the APK below
-            2. Enable "Install from Unknown Sources" in Android settings
-            3. Install the APK
-            4. Configure your Oracle Cloud IP in the app
-            5. Start chatting!
-            
-            ### Download:
-            - **Naruto-AI-Chat-v${{ github.event.inputs.version || github.ref_name }}.apk**
-            
-            ---
-            
-            Built with ❤️ using Kotlin, Jetpack Compose, and Llama 3.2
-          draft: false
-          prerelease: false
-      
-      - name: Upload Release APK
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./Naruto-AI-Chat-v${{ github.event.inputs.version || github.ref_name }}.apk
-          asset_name: Naruto-AI-Chat-v${{ github.event.inputs.version || github.ref_name }}.apk
-          asset_content_type: application/vnd.android.package-archive
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ github.event.inputs.version || github.ref_name }}"
+          gh release create "${VERSION}" \
+            --repo ${{ github.repository }} \
+            --title "Naruto AI Chat ${VERSION}" \
+            --notes "## Naruto AI Chat - Release ${VERSION}
+
+### ✨ Features:
+- 🍜 13 personnages (6 Naruto + 7 célébrités)
+- 🔓 Modes SFW et NSFW
+- 🤖 TinyLlama 1.1B sur Freebox (88.174.155.230:11434)
+- 💯 100% GRATUIT & ILLIMITÉ
+- 🎨 Material Design 3 UI
+
+### 📱 Installation:
+1. Télécharger l'APK
+2. Installer sur Android 8.0+
+3. Utiliser (déjà configuré pour Freebox!)
+
+### 🔗 Backend:
+- URL: http://88.174.155.230:11434
+- Modèle: TinyLlama 1.1B
+- Pas de clé API nécessaire
+
+Dattebayo! 🍜" \
+            "Naruto-AI-Chat-${VERSION}.apk"
