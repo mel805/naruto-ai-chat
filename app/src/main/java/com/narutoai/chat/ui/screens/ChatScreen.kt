@@ -47,8 +47,11 @@ fun ChatScreen(
     val isNSFWMode by viewModel.isNSFWMode
     val isLoading by viewModel.isLoading
     val error by viewModel.error
+    val isGeneratingImage by viewModel.isGeneratingImage
+    val isGeneratingVideo by viewModel.isGeneratingVideo
     
     var inputText by remember { mutableStateOf("") }
+    var showMediaMenu by remember { mutableStateOf(false) }
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -93,6 +96,46 @@ fun ChatScreen(
                     }
                 },
                 actions = {
+                    // Bouton génération de média
+                    IconButton(onClick = { showMediaMenu = !showMediaMenu }) {
+                        Icon(Icons.Default.PhotoLibrary, "Générer image/vidéo")
+                    }
+                    DropdownMenu(
+                        expanded = showMediaMenu,
+                        onDismissRequest = { showMediaMenu = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("📸 Générer Image") },
+                            onClick = {
+                                showMediaMenu = false
+                                viewModel.generateImageFromConversation()
+                            },
+                            leadingIcon = {
+                                if (isGeneratingImage) {
+                                    CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                                } else {
+                                    Icon(Icons.Default.Image, null)
+                                }
+                            },
+                            enabled = !isGeneratingImage && !isGeneratingVideo
+                        )
+                        DropdownMenuItem(
+                            text = { Text("🎬 Générer Vidéo") },
+                            onClick = {
+                                showMediaMenu = false
+                                viewModel.generateVideoFromConversation()
+                            },
+                            leadingIcon = {
+                                if (isGeneratingVideo) {
+                                    CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                                } else {
+                                    Icon(Icons.Default.VideoLibrary, null)
+                                }
+                            },
+                            enabled = !isGeneratingImage && !isGeneratingVideo
+                        )
+                    }
+                    
                     IconButton(
                         onClick = { viewModel.toggleNSFWMode() }
                     ) {
