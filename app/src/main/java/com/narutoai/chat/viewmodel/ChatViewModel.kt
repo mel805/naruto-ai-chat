@@ -247,6 +247,9 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 val style = if (character.category == com.narutoai.chat.models.CharacterCategory.NARUTO) "anime" else "realistic"
                 
                 val result = if (usePollination) {
+                    // IMPORTANT: Attendre 3s AVANT d'appeler Pollination après Groq
+                    kotlinx.coroutines.delay(3000)
+                    
                     // Fallback: Pollination AI (TOUJOURS disponible)
                     pollinationAIClient.generateImage(
                         prompt = imagePrompt,
@@ -372,6 +375,9 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 
                 // Générer la vidéo (Freebox si dispo, sinon frames Pollination)
                 val result = if (usePollination) {
+                    // IMPORTANT: Attendre 3s AVANT d'appeler Pollination après Groq
+                    kotlinx.coroutines.delay(3000)
+                    
                     // Fallback: Générer plusieurs frames avec Pollination AI
                     pollinationAIClient.generateImage(
                         prompt = "$videoPrompt, animated, cinematic movement",
