@@ -47,8 +47,8 @@ fun NarutoAIChatApp(viewModel: ChatViewModel) {
                         currentScreen = Screen.CHAT
                     },
                     onGenerateGallery = {
-                        // Générer galerie avec Pollination AI
-                        viewModel.generateCharacterGallery(character) { images ->
+                        // Générer galerie avec Pollination AI - 10 images
+                        viewModel.generateCharacterGallery(character, count = 10) { images ->
                             // Mettre à jour le personnage avec la galerie
                             // Note: Dans une vraie app, il faudrait mettre à jour la base de données
                             characterForDetail = character.copy(gallery = images)

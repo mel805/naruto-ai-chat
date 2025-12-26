@@ -411,9 +411,10 @@ fun GalleryTab(character: Character, onGenerateGallery: () -> Unit) {
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "Générez des images hyper-réalistes de ${character.name} avec Pollination AI",
+                        text = "Générez 10 images hyper-réalistes de ${character.name} avec Pollination AI",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
+                        color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f),
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
                     )
                     Button(
                         onClick = onGenerateGallery,
@@ -421,7 +422,7 @@ fun GalleryTab(character: Character, onGenerateGallery: () -> Unit) {
                     ) {
                         Icon(Icons.Default.AutoAwesome, null)
                         Spacer(Modifier.width(8.dp))
-                        Text("Générer la galerie")
+                        Text("Générer 10 images")
                     }
                 }
             }

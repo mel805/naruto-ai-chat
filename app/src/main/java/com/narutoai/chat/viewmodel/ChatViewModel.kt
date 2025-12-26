@@ -325,7 +325,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     /**
      * Génère une galerie d'images pour un personnage avec Pollination AI
      */
-    fun generateCharacterGallery(character: Character, onComplete: (List<String>) -> Unit) {
+    fun generateCharacterGallery(character: Character, count: Int = 6, onComplete: (List<String>) -> Unit) {
         _isGeneratingImage.value = true
         _error.value = null
         
@@ -335,7 +335,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                     characterName = character.name,
                     physicalDescription = character.physicalDescription,
                     style = if (character.category == com.narutoai.chat.models.CharacterCategory.NARUTO) "anime" else "realistic",
-                    count = 6
+                    count = count
                 )
                 
                 result.fold(
