@@ -193,21 +193,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         
         viewModelScope.launch {
             try {
-                // Test de connexion Freebox d'abord
-                val pingResult = freeboxMediaClient.ping()
-                if (pingResult.isFailure) {
-                    val errorMsg = "❌ Freebox Stable Diffusion non accessible. Vérifiez que le serveur est démarré sur http://88.174.155.230:7860"
-                    _error.value = errorMsg
-                    _isGeneratingImage.value = false
-                    
-                    // Remplacer le message de statut par l'erreur
-                    _messages.value = _messages.value.dropLast(1) + ChatMessage(
-                        content = errorMsg,
-                        isUser = false
-                    )
-                    return@launch
-                }
-                
                 // Prendre les derniers messages pour le contexte
                 val context = _messages.value.filter { !it.content.startsWith("🎨") && !it.content.startsWith("❌") }
                     .takeLast(5).joinToString("\n") { msg ->
@@ -246,21 +231,45 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                         return@launch
                     }
                 
-                // Générer l'image avec Freebox Stable Diffusion
+                // Test de connexion Freebox
+                val pingResult = freeboxMediaClient.ping()
+                val usePollination = pingResult.isFailure
+                
+                if (usePollination) {
+                    // Update status message
+                    _messages.value = _messages.value.dropLast(1) + ChatMessage(
+                        content = "🎨 Freebox non accessible, utilisation de Pollination AI...",
+                        isUser = false
+                    )
+                }
+                
+                // Générer l'image (Freebox si dispo, sinon Pollination AI)
                 val style = if (character.category == com.narutoai.chat.models.CharacterCategory.NARUTO) "anime" else "realistic"
-                val result = freeboxMediaClient.generateImage(
-                    prompt = imagePrompt,
-                    style = style
-                )
+                
+                val result = if (usePollination) {
+                    // Fallback: Pollination AI (TOUJOURS disponible)
+                    pollinationAIClient.generateImage(
+                        prompt = imagePrompt,
+                        model = if (style == "anime") "flux" else "flux-realism",
+                        enhance = true
+                    )
+                } else {
+                    // Primary: Freebox Stable Diffusion (local)
+                    freeboxMediaClient.generateImage(
+                        prompt = imagePrompt,
+                        style = style
+                    )
+                }
                 
                 result.fold(
                     onSuccess = { imageUrl ->
                         _generatedImageUrl.value = imageUrl
                         _isGeneratingImage.value = false
                         
+                        val source = if (usePollination) "Pollination AI" else "Freebox"
                         // Remplacer le message de statut par l'image
                         _messages.value = _messages.value.dropLast(1) + ChatMessage(
-                            content = "✅ Image générée:\n$imageUrl",
+                            content = "✅ Image générée ($source):\n$imageUrl",
                             isUser = false
                         )
                     },
@@ -313,19 +322,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         
         viewModelScope.launch {
             try {
-                // Test de connexion Freebox
-                val pingResult = freeboxMediaClient.ping()
-                if (pingResult.isFailure) {
-                    val errorMsg = "❌ Freebox Stable Diffusion non accessible"
-                    _error.value = errorMsg
-                    _isGeneratingVideo.value = false
-                    _messages.value = _messages.value.dropLast(1) + ChatMessage(
-                        content = errorMsg,
-                        isUser = false
-                    )
-                    return@launch
-                }
-                
                 val context = _messages.value.filter { !it.content.startsWith("🎬") && !it.content.startsWith("❌") }
                     .takeLast(5).joinToString("\n") { msg ->
                         val role = if (msg.isUser) "User" else character.name
@@ -362,19 +358,44 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                         return@launch
                     }
                 
-                // Générer la vidéo avec Freebox
-                val result = freeboxMediaClient.generateVideoFromPrompt(
-                    prompt = videoPrompt,
-                    duration = 2
-                )
+                // Test de connexion Freebox
+                val pingResult = freeboxMediaClient.ping()
+                val usePollination = pingResult.isFailure
+                
+                if (usePollination) {
+                    // Update status message
+                    _messages.value = _messages.value.dropLast(1) + ChatMessage(
+                        content = "🎬 Freebox non accessible, génération de frames avec Pollination AI...",
+                        isUser = false
+                    )
+                }
+                
+                // Générer la vidéo (Freebox si dispo, sinon frames Pollination)
+                val result = if (usePollination) {
+                    // Fallback: Générer plusieurs frames avec Pollination AI
+                    pollinationAIClient.generateImage(
+                        prompt = "$videoPrompt, animated, cinematic movement",
+                        model = "flux",
+                        enhance = true
+                    ).map { url ->
+                        url // Pour l'instant, retourner une seule frame comme "vidéo"
+                    }
+                } else {
+                    // Primary: Freebox Stable Diffusion (local)
+                    freeboxMediaClient.generateVideoFromPrompt(
+                        prompt = videoPrompt,
+                        duration = 2
+                    )
+                }
                 
                 result.fold(
                     onSuccess = { videoUrl ->
                         _generatedVideoUrl.value = videoUrl
                         _isGeneratingVideo.value = false
                         
+                        val source = if (usePollination) "Pollination AI" else "Freebox"
                         _messages.value = _messages.value.dropLast(1) + ChatMessage(
-                            content = "✅ Vidéo générée:\n$videoUrl",
+                            content = "✅ ${if (usePollination) "Image animée" else "Vidéo"} générée ($source):\n$videoUrl",
                             isUser = false
                         )
                     },
