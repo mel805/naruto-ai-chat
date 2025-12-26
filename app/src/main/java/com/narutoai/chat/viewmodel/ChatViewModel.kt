@@ -171,47 +171,79 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
      * Utilise FreeboxMediaClient (Stable Diffusion local)
      */
     fun generateImageFromConversation() {
-        val character = _selectedCharacter.value ?: return
+        val character = _selectedCharacter.value ?: run {
+            _error.value = "Aucun personnage sélectionné"
+            return
+        }
+        
+        if (_messages.value.isEmpty()) {
+            _error.value = "Discutez d'abord avec le personnage avant de générer une image"
+            return
+        }
         
         _isGeneratingImage.value = true
         _error.value = null
+        
+        // Ajouter message de statut
+        val statusMessage = ChatMessage(
+            content = "🎨 Génération d'image en cours...",
+            isUser = false
+        )
+        _messages.value = _messages.value + statusMessage
         
         viewModelScope.launch {
             try {
                 // Test de connexion Freebox d'abord
                 val pingResult = freeboxMediaClient.ping()
                 if (pingResult.isFailure) {
-                    _error.value = "Freebox Stable Diffusion non accessible. Vérifiez que le serveur est démarré sur http://88.174.155.230:7860"
+                    val errorMsg = "❌ Freebox Stable Diffusion non accessible. Vérifiez que le serveur est démarré sur http://88.174.155.230:7860"
+                    _error.value = errorMsg
                     _isGeneratingImage.value = false
+                    
+                    // Remplacer le message de statut par l'erreur
+                    _messages.value = _messages.value.dropLast(1) + ChatMessage(
+                        content = errorMsg,
+                        isUser = false
+                    )
                     return@launch
                 }
                 
                 // Prendre les derniers messages pour le contexte
-                val context = _messages.value.takeLast(5).joinToString("\n") { msg ->
-                    val role = if (msg.isUser) "User" else character.name
-                    "$role: ${msg.content}"
-                }
+                val context = _messages.value.filter { !it.content.startsWith("🎨") && !it.content.startsWith("❌") }
+                    .takeLast(5).joinToString("\n") { msg ->
+                        val role = if (msg.isUser) "User" else character.name
+                        "$role: ${msg.content}"
+                    }
                 
                 // Créer un prompt d'image avec Groq
                 val promptRequest = """
-                    Basé sur cette conversation avec ${character.name}:
+                    Based on this conversation with ${character.name}:
                     $context
                     
-                    Crée un prompt court (max 50 mots) en ANGLAIS pour générer une image qui représente cette scène.
-                    Inclus le nom du personnage et sa description physique.
-                    Réponds UNIQUEMENT avec le prompt en anglais, sans explication.
+                    Physical description of ${character.name}:
+                    ${character.physicalDescription}
+                    
+                    Create a detailed prompt in ENGLISH (max 75 words) for generating a hyper-realistic image of this scene.
+                    Include: character's physical features, setting, mood, lighting, and action.
+                    Respond ONLY with the English prompt, no explanation.
                 """.trimIndent()
                 
                 val promptResult = groqClient.chat(
-                    systemPrompt = "Tu es un expert en création de prompts pour génération d'images.",
+                    systemPrompt = "You are an expert at creating detailed prompts for AI image generation. Focus on visual details, lighting, and atmosphere.",
                     userMessage = promptRequest,
-                    maxTokens = 100
+                    maxTokens = 150
                 )
                 
                 val imagePrompt = promptResult.getOrNull()
-                    ?: return@launch run {
-                        _error.value = "Échec de création du prompt"
+                    ?: run {
+                        val errorMsg = "❌ Échec de création du prompt avec Groq"
+                        _error.value = errorMsg
                         _isGeneratingImage.value = false
+                        _messages.value = _messages.value.dropLast(1) + ChatMessage(
+                            content = errorMsg,
+                            isUser = false
+                        )
+                        return@launch
                     }
                 
                 // Générer l'image avec Freebox Stable Diffusion
@@ -226,21 +258,30 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                         _generatedImageUrl.value = imageUrl
                         _isGeneratingImage.value = false
                         
-                        // Ajouter un message avec l'image
-                        val imageMessage = ChatMessage(
-                            content = "[Image générée] $imageUrl",
+                        // Remplacer le message de statut par l'image
+                        _messages.value = _messages.value.dropLast(1) + ChatMessage(
+                            content = "✅ Image générée:\n$imageUrl",
                             isUser = false
                         )
-                        _messages.value = _messages.value + imageMessage
                     },
                     onFailure = { exception ->
-                        _error.value = "Erreur génération image: ${exception.message}"
+                        val errorMsg = "❌ Erreur génération image: ${exception.message}"
+                        _error.value = errorMsg
                         _isGeneratingImage.value = false
+                        _messages.value = _messages.value.dropLast(1) + ChatMessage(
+                            content = errorMsg,
+                            isUser = false
+                        )
                     }
                 )
             } catch (e: Exception) {
-                _error.value = "Erreur: ${e.message}"
+                val errorMsg = "❌ Erreur: ${e.message}"
+                _error.value = errorMsg
                 _isGeneratingImage.value = false
+                _messages.value = _messages.value.dropLast(1) + ChatMessage(
+                    content = errorMsg,
+                    isUser = false
+                )
             }
         }
     }
@@ -250,46 +291,75 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
      * Utilise FreeboxMediaClient
      */
     fun generateVideoFromConversation() {
-        val character = _selectedCharacter.value ?: return
+        val character = _selectedCharacter.value ?: run {
+            _error.value = "Aucun personnage sélectionné"
+            return
+        }
+        
+        if (_messages.value.isEmpty()) {
+            _error.value = "Discutez d'abord avec le personnage avant de générer une vidéo"
+            return
+        }
         
         _isGeneratingVideo.value = true
         _error.value = null
+        
+        // Ajouter message de statut
+        val statusMessage = ChatMessage(
+            content = "🎬 Génération de vidéo en cours... (cela peut prendre 1-2 minutes)",
+            isUser = false
+        )
+        _messages.value = _messages.value + statusMessage
         
         viewModelScope.launch {
             try {
                 // Test de connexion Freebox
                 val pingResult = freeboxMediaClient.ping()
                 if (pingResult.isFailure) {
-                    _error.value = "Freebox Stable Diffusion non accessible"
+                    val errorMsg = "❌ Freebox Stable Diffusion non accessible"
+                    _error.value = errorMsg
                     _isGeneratingVideo.value = false
+                    _messages.value = _messages.value.dropLast(1) + ChatMessage(
+                        content = errorMsg,
+                        isUser = false
+                    )
                     return@launch
                 }
                 
-                val context = _messages.value.takeLast(5).joinToString("\n") { msg ->
-                    val role = if (msg.isUser) "User" else character.name
-                    "$role: ${msg.content}"
-                }
+                val context = _messages.value.filter { !it.content.startsWith("🎬") && !it.content.startsWith("❌") }
+                    .takeLast(5).joinToString("\n") { msg ->
+                        val role = if (msg.isUser) "User" else character.name
+                        "$role: ${msg.content}"
+                    }
                 
-                // Créer un prompt d'image avec Groq
+                // Créer un prompt vidéo avec Groq
                 val promptRequest = """
-                    Basé sur cette conversation avec ${character.name}:
+                    Based on this conversation with ${character.name}:
                     $context
                     
-                    Crée un prompt en ANGLAIS pour une vidéo courte (2-4 sec) représentant cette scène.
-                    Inclus des détails de mouvement et d'action.
-                    Réponds UNIQUEMENT avec le prompt en anglais, sans explication.
+                    Physical description: ${character.physicalDescription}
+                    
+                    Create a detailed video prompt in ENGLISH (max 75 words) for a 2-4 second animated scene.
+                    Include: character movement, camera angle, lighting, and atmosphere.
+                    Respond ONLY with the English prompt, no explanation.
                 """.trimIndent()
                 
                 val promptResult = groqClient.chat(
-                    systemPrompt = "Tu es un expert en prompts pour génération de vidéos.",
+                    systemPrompt = "You are an expert at creating cinematic video prompts with movement and action details.",
                     userMessage = promptRequest,
-                    maxTokens = 100
+                    maxTokens = 150
                 )
                 
                 val videoPrompt = promptResult.getOrNull()
-                    ?: return@launch run {
-                        _error.value = "Échec de création du prompt"
+                    ?: run {
+                        val errorMsg = "❌ Échec de création du prompt vidéo"
+                        _error.value = errorMsg
                         _isGeneratingVideo.value = false
+                        _messages.value = _messages.value.dropLast(1) + ChatMessage(
+                            content = errorMsg,
+                            isUser = false
+                        )
+                        return@launch
                     }
                 
                 // Générer la vidéo avec Freebox
@@ -303,21 +373,29 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                         _generatedVideoUrl.value = videoUrl
                         _isGeneratingVideo.value = false
                         
-                        // Ajouter un message avec la vidéo
-                        val videoMessage = ChatMessage(
-                            content = "[Vidéo générée] $videoUrl",
+                        _messages.value = _messages.value.dropLast(1) + ChatMessage(
+                            content = "✅ Vidéo générée:\n$videoUrl",
                             isUser = false
                         )
-                        _messages.value = _messages.value + videoMessage
                     },
                     onFailure = { exception ->
-                        _error.value = "Erreur génération vidéo: ${exception.message}"
+                        val errorMsg = "❌ Erreur génération vidéo: ${exception.message}"
+                        _error.value = errorMsg
                         _isGeneratingVideo.value = false
+                        _messages.value = _messages.value.dropLast(1) + ChatMessage(
+                            content = errorMsg,
+                            isUser = false
+                        )
                     }
                 )
             } catch (e: Exception) {
-                _error.value = "Erreur: ${e.message}"
+                val errorMsg = "❌ Erreur: ${e.message}"
+                _error.value = errorMsg
                 _isGeneratingVideo.value = false
+                _messages.value = _messages.value.dropLast(1) + ChatMessage(
+                    content = errorMsg,
+                    isUser = false
+                )
             }
         }
     }
