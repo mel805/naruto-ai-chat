@@ -50,6 +50,9 @@ class PollinationAIClient {
         enhance: Boolean = true
     ): Result<String> = withContext(Dispatchers.IO) {
         try {
+            // Delay pour éviter rate limit 429
+            delay(1000)
+            
             // Pollination AI utilise une API simple par URL
             // Format: https://image.pollinations.ai/prompt/{prompt}?width={w}&height={h}
             
@@ -68,6 +71,8 @@ class PollinationAIClient {
                 append("&model=$model")
                 append("&nologo=true") // Sans watermark
                 append("&enhance=true") // Amélioration automatique
+                // Seed unique pour éviter cache et limiter les 429
+                append("&seed=${System.currentTimeMillis()}")
             }
             
             // Vérifier que l'image est accessible
@@ -158,8 +163,8 @@ class PollinationAIClient {
                 
                 result.getOrNull()?.let { images.add(it) }
                 
-                // Petite pause pour ne pas surcharger l'API
-                delay(1000)
+                // Pause plus longue pour ne pas surcharger l'API
+                delay(2000)
             }
             
             if (images.isEmpty()) {
