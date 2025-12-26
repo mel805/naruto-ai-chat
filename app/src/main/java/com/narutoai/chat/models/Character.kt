@@ -31,7 +31,10 @@ data class Character(
     val skills: List<String> = emptyList(), // Compétences/capacités
     
     val gallery: List<String> = emptyList(), // URLs des images de la galerie
-    val thumbnailUrl: String = "" // URL de la vignette générée par Pollination
+    val thumbnailUrl: String = "", // URL de la vignette générée par Pollination
+    
+    // Message d'accueil au démarrage de la conversation
+    val greetingMessage: String = "" // Première phrase du personnage en lien avec son scénario
 )
 
 enum class CharacterCategory {

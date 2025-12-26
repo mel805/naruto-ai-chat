@@ -63,6 +63,19 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         _messages.value = emptyList()
         _isNSFWMode.value = false
         _error.value = null
+        
+        // Ajouter message d'accueil automatique si disponible
+        if (character.greetingMessage.isNotEmpty()) {
+            viewModelScope.launch {
+                // Petit délai pour effet naturel
+                kotlinx.coroutines.delay(500)
+                val greetingMsg = ChatMessage(
+                    content = character.greetingMessage,
+                    isUser = false
+                )
+                _messages.value = listOf(greetingMsg)
+            }
+        }
     }
     
     fun toggleNSFWMode() {
@@ -155,7 +168,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     
     /**
      * Génère une image basée sur le contexte de la conversation
-     * Utilise FreeboxMediaClient (Stable Diffusion local) au lieu de Replicate
+     * Utilise FreeboxMediaClient (Stable Diffusion local)
      */
     fun generateImageFromConversation() {
         val character = _selectedCharacter.value ?: return
@@ -165,6 +178,14 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         
         viewModelScope.launch {
             try {
+                // Test de connexion Freebox d'abord
+                val pingResult = freeboxMediaClient.ping()
+                if (pingResult.isFailure) {
+                    _error.value = "Freebox Stable Diffusion non accessible. Vérifiez que le serveur est démarré sur http://88.174.155.230:7860"
+                    _isGeneratingImage.value = false
+                    return@launch
+                }
+                
                 // Prendre les derniers messages pour le contexte
                 val context = _messages.value.takeLast(5).joinToString("\n") { msg ->
                     val role = if (msg.isUser) "User" else character.name
@@ -176,8 +197,9 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                     Basé sur cette conversation avec ${character.name}:
                     $context
                     
-                    Crée un prompt court (max 50 mots) pour générer une image qui représente cette scène.
-                    Réponds UNIQUEMENT avec le prompt, sans explication.
+                    Crée un prompt court (max 50 mots) en ANGLAIS pour générer une image qui représente cette scène.
+                    Inclus le nom du personnage et sa description physique.
+                    Réponds UNIQUEMENT avec le prompt en anglais, sans explication.
                 """.trimIndent()
                 
                 val promptResult = groqClient.chat(
@@ -193,9 +215,10 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                     }
                 
                 // Générer l'image avec Freebox Stable Diffusion
+                val style = if (character.category == com.narutoai.chat.models.CharacterCategory.NARUTO) "anime" else "realistic"
                 val result = freeboxMediaClient.generateImage(
                     prompt = imagePrompt,
-                    style = "realistic"
+                    style = style
                 )
                 
                 result.fold(
@@ -224,7 +247,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     
     /**
      * Génère une vidéo basée sur le contexte de la conversation
-     * Utilise FreeboxMediaClient au lieu de Replicate
+     * Utilise FreeboxMediaClient
      */
     fun generateVideoFromConversation() {
         val character = _selectedCharacter.value ?: return
@@ -234,6 +257,14 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         
         viewModelScope.launch {
             try {
+                // Test de connexion Freebox
+                val pingResult = freeboxMediaClient.ping()
+                if (pingResult.isFailure) {
+                    _error.value = "Freebox Stable Diffusion non accessible"
+                    _isGeneratingVideo.value = false
+                    return@launch
+                }
+                
                 val context = _messages.value.takeLast(5).joinToString("\n") { msg ->
                     val role = if (msg.isUser) "User" else character.name
                     "$role: ${msg.content}"
@@ -244,8 +275,9 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                     Basé sur cette conversation avec ${character.name}:
                     $context
                     
-                    Crée un prompt pour une vidéo courte (2-4 sec) représentant cette scène.
-                    Réponds UNIQUEMENT avec le prompt, sans explication.
+                    Crée un prompt en ANGLAIS pour une vidéo courte (2-4 sec) représentant cette scène.
+                    Inclus des détails de mouvement et d'action.
+                    Réponds UNIQUEMENT avec le prompt en anglais, sans explication.
                 """.trimIndent()
                 
                 val promptResult = groqClient.chat(
