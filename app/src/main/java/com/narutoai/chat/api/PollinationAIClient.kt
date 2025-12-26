@@ -50,8 +50,8 @@ class PollinationAIClient {
         enhance: Boolean = true
     ): Result<String> = withContext(Dispatchers.IO) {
         try {
-            // Delay pour éviter rate limit 429
-            delay(1000)
+            // Delay LONG pour éviter rate limit 429 (augmenté à 5s)
+            delay(5000)
             
             // Pollination AI utilise une API simple par URL
             // Format: https://image.pollinations.ai/prompt/{prompt}?width={w}&height={h}
@@ -163,8 +163,8 @@ class PollinationAIClient {
                 
                 result.getOrNull()?.let { images.add(it) }
                 
-                // Pause plus longue pour ne pas surcharger l'API
-                delay(2000)
+                // Pause TRÈS longue pour ne pas surcharger l'API (augmenté à 8s)
+                delay(8000)
             }
             
             if (images.isEmpty()) {
