@@ -27,7 +27,8 @@ import com.narutoai.chat.models.CharacterCategory
 @Composable
 fun CharacterSelectionScreen(
     onCharacterSelected: (Character) -> Unit,
-    onSettingsClick: () -> Unit = {}
+    onSettingsClick: () -> Unit = {},
+    viewModel: com.narutoai.chat.viewmodel.ChatViewModel? = null
 ) {
     var selectedCategory by remember { mutableStateOf<CharacterCategory?>(null) }
     
@@ -103,7 +104,8 @@ fun CharacterSelectionScreen(
                 items(characters) { character ->
                     CharacterCard(
                         character = character,
-                        onClick = { onCharacterSelected(character) }
+                        onClick = { onCharacterSelected(character) },
+                        viewModel = viewModel
                     )
                 }
             }
@@ -143,8 +145,19 @@ fun CategoryChip(
 @Composable
 fun CharacterCard(
     character: Character,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    viewModel: com.narutoai.chat.viewmodel.ChatViewModel? = null
 ) {
+    var thumbnailUrl by remember { mutableStateOf(character.thumbnailUrl) }
+    
+    // Générer la vignette au premier affichage si elle n'existe pas
+    LaunchedEffect(character.id) {
+        if (thumbnailUrl.isEmpty() && character.physicalDescription.isNotEmpty() && viewModel != null) {
+            viewModel.generateCharacterThumbnail(character) { url ->
+                thumbnailUrl = url
+            }
+        }
+    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -158,9 +171,13 @@ fun CharacterCard(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Avatar avec image locale
+            // Avatar avec vignette Pollination AI ou image locale
             AsyncImage(
-                model = if (character.imageResId != 0) character.imageResId else character.avatarEmoji,
+                model = when {
+                    thumbnailUrl.isNotEmpty() -> thumbnailUrl
+                    character.imageResId != 0 -> character.imageResId
+                    else -> character.avatarEmoji
+                },
                 contentDescription = character.name,
                 modifier = Modifier
                     .size(80.dp)

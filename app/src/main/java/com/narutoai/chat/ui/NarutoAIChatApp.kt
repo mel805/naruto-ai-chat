@@ -1,6 +1,8 @@
 package com.narutoai.chat.ui
 
 import androidx.compose.runtime.*
+import com.narutoai.chat.models.Character
+import com.narutoai.chat.ui.screens.CharacterDetailScreen
 import com.narutoai.chat.ui.screens.CharacterSelectionScreen
 import com.narutoai.chat.ui.screens.ChatScreen
 import com.narutoai.chat.ui.screens.SettingsScreen
@@ -8,6 +10,7 @@ import com.narutoai.chat.viewmodel.ChatViewModel
 
 enum class Screen {
     CHARACTER_SELECTION,
+    CHARACTER_DETAIL,
     CHAT,
     SETTINGS
 }
@@ -15,34 +18,61 @@ enum class Screen {
 @Composable
 fun NarutoAIChatApp(viewModel: ChatViewModel) {
     var currentScreen by remember { mutableStateOf(Screen.CHARACTER_SELECTION) }
+    var characterForDetail by remember { mutableStateOf<Character?>(null) }
     val selectedCharacter = viewModel.selectedCharacter.value
     
     when (currentScreen) {
         Screen.CHARACTER_SELECTION -> {
             CharacterSelectionScreen(
                 onCharacterSelected = { character ->
-                    viewModel.selectCharacter(character)
-                    currentScreen = Screen.CHAT
+                    characterForDetail = character
+                    currentScreen = Screen.CHARACTER_DETAIL
                 },
                 onSettingsClick = {
                     currentScreen = Screen.SETTINGS
-                }
+                },
+                viewModel = viewModel
             )
         }
+        
+        Screen.CHARACTER_DETAIL -> {
+            characterForDetail?.let { character ->
+                CharacterDetailScreen(
+                    character = character,
+                    onBackClick = {
+                        currentScreen = Screen.CHARACTER_SELECTION
+                    },
+                    onStartChat = {
+                        viewModel.selectCharacter(character)
+                        currentScreen = Screen.CHAT
+                    },
+                    onGenerateGallery = {
+                        // Générer galerie avec Pollination AI
+                        viewModel.generateCharacterGallery(character) { images ->
+                            // Mettre à jour le personnage avec la galerie
+                            // Note: Dans une vraie app, il faudrait mettre à jour la base de données
+                            characterForDetail = character.copy(gallery = images)
+                        }
+                    }
+                )
+            }
+        }
+        
         Screen.CHAT -> {
             if (selectedCharacter != null) {
                 ChatScreen(
                     viewModel = viewModel,
                     character = selectedCharacter,
                     onBackClick = {
-                        viewModel.goBack()
-                        currentScreen = Screen.CHARACTER_SELECTION
+                        currentScreen = Screen.CHARACTER_DETAIL
+                        characterForDetail = selectedCharacter
                     }
                 )
             } else {
                 currentScreen = Screen.CHARACTER_SELECTION
             }
         }
+        
         Screen.SETTINGS -> {
             SettingsScreen(
                 viewModel = viewModel,

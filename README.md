@@ -22,9 +22,16 @@ AI-powered chat application featuring Naruto characters and celebrities with rea
 - **Real-time Stats**: Monitor usage for each key
 
 ### 🎨 Media Generation (NEW!)
-- **📸 Image Generation**: Create images from conversation context
-- **🎬 Video Generation**: Generate short animated videos
-- **Powered by Replicate**: Stable Diffusion & Video models
+- **📸 Image Generation**: Create images with Freebox Stable Diffusion (local & unlimited!)
+- **🎬 Video Generation**: Generate short animated videos locally
+- **Powered by Freebox**: 100% gratuit, local, illimité
+- **Pollination AI**: Vignettes et galeries hyper-réalistes
+
+### 👤 Character Details (NEW!)
+- **Page de Présentation**: Description physique complète, scénario, tempérament
+- **Galerie Photos**: 6 images hyper-réalistes par personnage (Pollination AI)
+- **Vignettes Générées**: Images automatiques pour chaque personnage
+- **Profil Détaillé**: Âge, taille, traits distinctifs, compétences
 
 ---
 

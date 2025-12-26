@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.narutoai.chat.api.GroqClient
 import com.narutoai.chat.api.ImageGenerationClient
 import com.narutoai.chat.api.VideoGenerationClient
+import com.narutoai.chat.api.FreeboxMediaClient
+import com.narutoai.chat.api.PollinationAIClient
 import com.narutoai.chat.models.Character
 import com.narutoai.chat.models.ChatMessage
 import kotlinx.coroutines.launch
@@ -47,6 +49,8 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     private val groqClient = GroqClient(application.applicationContext)
     private val imageClient = ImageGenerationClient(application.applicationContext)
     private val videoClient = VideoGenerationClient(application.applicationContext)
+    private val freeboxMediaClient = FreeboxMediaClient()
+    private val pollinationAIClient = PollinationAIClient()
     
     init {
         viewModelScope.launch {
@@ -151,15 +155,10 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     
     /**
      * Génère une image basée sur le contexte de la conversation
+     * Utilise FreeboxMediaClient (Stable Diffusion local) au lieu de Replicate
      */
     fun generateImageFromConversation() {
         val character = _selectedCharacter.value ?: return
-        val apiKey = _replicateApiKey.value
-        
-        if (apiKey.isNullOrBlank()) {
-            _error.value = "Clé API Replicate requise pour générer des images"
-            return
-        }
         
         _isGeneratingImage.value = true
         _error.value = null
@@ -172,11 +171,31 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                     "$role: ${msg.content}"
                 }
                 
-                val result = imageClient.generateImageFromContext(
-                    characterName = character.name,
-                    conversationContext = context,
-                    groqClient = groqClient,
-                    replicateApiKey = apiKey
+                // Créer un prompt d'image avec Groq
+                val promptRequest = """
+                    Basé sur cette conversation avec ${character.name}:
+                    $context
+                    
+                    Crée un prompt court (max 50 mots) pour générer une image qui représente cette scène.
+                    Réponds UNIQUEMENT avec le prompt, sans explication.
+                """.trimIndent()
+                
+                val promptResult = groqClient.chat(
+                    systemPrompt = "Tu es un expert en création de prompts pour génération d'images.",
+                    userMessage = promptRequest,
+                    maxTokens = 100
+                )
+                
+                val imagePrompt = promptResult.getOrNull()
+                    ?: return@launch run {
+                        _error.value = "Échec de création du prompt"
+                        _isGeneratingImage.value = false
+                    }
+                
+                // Générer l'image avec Freebox Stable Diffusion
+                val result = freeboxMediaClient.generateImage(
+                    prompt = imagePrompt,
+                    style = "realistic"
                 )
                 
                 result.fold(
@@ -205,15 +224,10 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     
     /**
      * Génère une vidéo basée sur le contexte de la conversation
+     * Utilise FreeboxMediaClient au lieu de Replicate
      */
     fun generateVideoFromConversation() {
         val character = _selectedCharacter.value ?: return
-        val apiKey = _replicateApiKey.value
-        
-        if (apiKey.isNullOrBlank()) {
-            _error.value = "Clé API Replicate requise pour générer des vidéos"
-            return
-        }
         
         _isGeneratingVideo.value = true
         _error.value = null
@@ -225,12 +239,31 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                     "$role: ${msg.content}"
                 }
                 
-                val result = videoClient.generateVideoFromContext(
-                    characterName = character.name,
-                    conversationContext = context,
-                    groqClient = groqClient,
-                    imageGenerationClient = imageClient,
-                    replicateApiKey = apiKey
+                // Créer un prompt d'image avec Groq
+                val promptRequest = """
+                    Basé sur cette conversation avec ${character.name}:
+                    $context
+                    
+                    Crée un prompt pour une vidéo courte (2-4 sec) représentant cette scène.
+                    Réponds UNIQUEMENT avec le prompt, sans explication.
+                """.trimIndent()
+                
+                val promptResult = groqClient.chat(
+                    systemPrompt = "Tu es un expert en prompts pour génération de vidéos.",
+                    userMessage = promptRequest,
+                    maxTokens = 100
+                )
+                
+                val videoPrompt = promptResult.getOrNull()
+                    ?: return@launch run {
+                        _error.value = "Échec de création du prompt"
+                        _isGeneratingVideo.value = false
+                    }
+                
+                // Générer la vidéo avec Freebox
+                val result = freeboxMediaClient.generateVideoFromPrompt(
+                    prompt = videoPrompt,
+                    duration = 2
                 )
                 
                 result.fold(
@@ -253,6 +286,65 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             } catch (e: Exception) {
                 _error.value = "Erreur: ${e.message}"
                 _isGeneratingVideo.value = false
+            }
+        }
+    }
+    
+    /**
+     * Génère une galerie d'images pour un personnage avec Pollination AI
+     */
+    fun generateCharacterGallery(character: Character, onComplete: (List<String>) -> Unit) {
+        _isGeneratingImage.value = true
+        _error.value = null
+        
+        viewModelScope.launch {
+            try {
+                val result = pollinationAIClient.generateCharacterGallery(
+                    characterName = character.name,
+                    physicalDescription = character.physicalDescription,
+                    style = if (character.category == com.narutoai.chat.models.CharacterCategory.NARUTO) "anime" else "realistic",
+                    count = 6
+                )
+                
+                result.fold(
+                    onSuccess = { images ->
+                        _isGeneratingImage.value = false
+                        onComplete(images)
+                    },
+                    onFailure = { exception ->
+                        _error.value = "Erreur génération galerie: ${exception.message}"
+                        _isGeneratingImage.value = false
+                    }
+                )
+            } catch (e: Exception) {
+                _error.value = "Erreur: ${e.message}"
+                _isGeneratingImage.value = false
+            }
+        }
+    }
+    
+    /**
+     * Génère une vignette pour un personnage avec Pollination AI
+     */
+    fun generateCharacterThumbnail(character: Character, onComplete: (String) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val result = pollinationAIClient.generateCharacterThumbnail(
+                    characterName = character.name,
+                    physicalDescription = character.physicalDescription,
+                    style = if (character.category == com.narutoai.chat.models.CharacterCategory.NARUTO) "anime" else "realistic"
+                )
+                
+                result.fold(
+                    onSuccess = { thumbnailUrl ->
+                        onComplete(thumbnailUrl)
+                    },
+                    onFailure = { exception ->
+                        _error.value = "Erreur génération vignette: ${exception.message}"
+                    }
+                )
+            } catch (e: Exception) {
+                _error.value = "Erreur: ${e.message}"
             }
         }
     }
