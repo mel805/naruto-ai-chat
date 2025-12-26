@@ -32,7 +32,7 @@ class ApiKeyManager(private val context: Context) {
         private const val MAX_ERRORS_PER_KEY = 3
         
         // Clés par défaut (à remplacer par l'utilisateur)
-        private val DEFAULT_KEYS = listOf(
+        private val DEFAULT_KEYS = listOf<String>(
             // L'utilisateur devra ajouter ses clés via l'interface
         )
     }
