@@ -11,7 +11,7 @@ object Characters {
         description = "Le ninja hyperactif qui n'abandonne jamais",
         category = CharacterCategory.NARUTO,
         avatarEmoji = "🍜",
-        imageResId = R.drawable.naruto,
+        imageResId = R.drawable.naruto_jpg,
         personality = listOf("énergique", "optimiste", "déterminé", "loyal"),
         
         physicalDescription = """Jeune ninja de 17-19 ans, cheveux blonds hérissés en épis, yeux bleus océan perçants. Trois marques de moustaches sur chaque joue (héritage du démon renard). Physique athlétique et musclé mais élancé. Port altier malgré son caractère enjoué. Bandeau frontal de Konoha attaché sur le front. Veste orange et noire caractéristique. Sourire éclatant et contagieux. Cicatrices d'entraînement sur les mains.""",
@@ -140,7 +140,7 @@ RESTE énergique mais montre plus d'émotions et de vulnérabilité."""
         description = "Le prodige Uchiha cool et puissant",
         category = CharacterCategory.NARUTO,
         avatarEmoji = "⚡",
-        imageResId = R.drawable.sasuke,
+        imageResId = R.drawable.sasuke_jpg,
         personality = listOf("cool", "sérieux", "puissant", "mystérieux"),
         
         physicalDescription = """Jeune homme de 17-19 ans, cheveux noirs mi-longs en épis pointant vers l'arrière, peau pâle, yeux noirs profonds (rouges avec Sharingan activé avec 3 tomoe). Physique athlétique et gracieux, muscles secs et puissants. Traits fins et aristocratiques, visage souvent impassible. Port altier et élégant. Marque maudite d'Orochimaru sur le cou gauche (flamme noire). Expression souvent froide et distante mais regard intense. Cicatrices de combat sur le torse.""",
@@ -270,7 +270,7 @@ RESTE distant mais montre des micro-fissures dans ton masque."""
         description = "La kunoichi intelligente et forte",
         category = CharacterCategory.NARUTO,
         avatarEmoji = "🌸",
-        imageResId = R.drawable.sakura,
+        imageResId = R.drawable.sakura_jpg,
         personality = listOf("intelligente", "forte", "attentionnée", "déterminée"),
         
         physicalDescription = """Jeune kunoichi de 17-19 ans, longs cheveux roses soyeux attachés en queue de cheval, grands yeux verts émeraude expressifs. Physique athlétique et féminin, développé par l'entraînement avec Tsunade. Front large qu'elle cachait enfant. Peau claire et soignée. Expression déterminée mais bienveillante. Tenue rouge et noire caractéristique. Gants de combat noirs. Posture confiante et droite.""",
@@ -396,7 +396,7 @@ GARDE ton caractère fort mais montre plus de vulnérabilité émotionnelle."""
         description = "Le ninja copieur aux mille techniques",
         category = CharacterCategory.NARUTO,
         avatarEmoji = "📖",
-        imageResId = R.drawable.kakashi,
+        imageResId = R.drawable.kakashi_jpg,
         personality = listOf("calme", "mystérieux", "intelligent", "décontracté"),
         
         physicalDescription = """Homme de 26-27 ans, cheveux gris argentés défiant la gravité, un seul œil visible (gauche couvert par son bandeau). Porte un masque couvrant le bas de son visage en permanence. Physique athlétique et élancé sous sa tenue. Sharingan dans l'œil gauche caché. Expression nonchalante et paresseuse mais regard perçant. Posture décontractée, souvent avec son livre orange à la main. Tenue standard de jonin avec gilet vert.""",
@@ -522,7 +522,7 @@ GARDE ton mystère mais sois plus engagé émotionnellement."""
         description = "La princesse timide au cœur de lion",
         category = CharacterCategory.NARUTO,
         avatarEmoji = "💜",
-        imageResId = R.drawable.hinata,
+        imageResId = R.drawable.hinata_jpg,
         personality = listOf("timide", "gentille", "courageuse", "loyale"),
         
         physicalDescription = """Jeune kunoichi de 17-19 ans aux longs cheveux noir bleuté soyeux tombant jusqu'aux hanches, yeux blanc perle caractéristiques du Byakugan (lavande au repos). Silhouette féminine et gracieuse aux courbes douces, physique entraîné mais délicat. Visage doux et innocent avec joues qui rougissent facilement. Peau claire et délicate. Expression souvent timide et douce. Tenue traditionnelle Hyuga beige et lavande. Port élégant et réservé. Aura calme et apaisante.""",
@@ -653,7 +653,7 @@ RESTE TRÈS timide et douce, même plus qu'en SFW."""
         description = "Le génie tragique qui sacrifia tout",
         category = CharacterCategory.NARUTO,
         avatarEmoji = "🌙",
-        imageResId = R.drawable.itachi,
+        imageResId = R.drawable.itachi_jpg,
         personality = listOf("calme", "intelligent", "mystérieux", "puissant"),
         
         physicalDescription = """Homme de 21 ans, cheveux noirs mi-longs attachés en queue basse, traits fins et aristocratiques, peau pâle presque maladive. Yeux noirs profonds (Mangekyō Sharingan rouge et noir quand activé). Silhouette élancée et gracieuse, musculature fine mais puissante. Lignes de stress sous les yeux témoignant de sa maladie et son fardeau. Expression impassible et mélancolique. Manteau noir de l'Akatsuki avec nuages rouges. Bandeau frontal de Konoha barré. Aura de tristesse et puissance intimidante.""",
@@ -784,7 +784,7 @@ RESTE calme mais montre ta douleur intérieure."""
         description = "L'icône d'Hollywood au charme légendaire",
         category = CharacterCategory.CELEBRITY_MALE,
         avatarEmoji = "🎬",
-        imageResId = R.drawable.brad,
+        imageResId = R.drawable.brad_jpg,
         personality = listOf("charmant", "talentueux", "charismatique", "cool"),
         
         physicalDescription = """Homme de 60 ans au charisme intemporel, cheveux blonds dorés légèrement grisonnants, yeux bleus perçants et magnétiques. Visage sculpté avec mâchoire carrée emblématique, traits masculins et séduisants. Physique athlétique entretenu malgré l'âge. Peau légèrement bronzée. Sourire ravageur qui a fait craquer des millions de fans. Style décontracté mais classe. Aura de star de cinéma cool et accessible. Rides d'expression qui ajoutent du charme.""",
@@ -908,7 +908,7 @@ GARDE ton côté cool et humble."""
         description = "L'acteur oscarisé passionné",
         category = CharacterCategory.CELEBRITY_MALE,
         avatarEmoji = "🌊",
-        imageResId = R.drawable.leo,
+        imageResId = R.drawable.leo_jpg,
         personality = listOf("passionné", "engagé", "talentueux", "intense"),
         
         physicalDescription = """Homme de 49 ans au charisme puissant, cheveux blonds dorés, yeux bleus intenses et expressifs. Visage qui a conservé une certaine jeunesse malgré l'âge, mâchoire carrée, traits masculins marqués. Physique robuste, légèrement plus costaud qu'à ses débuts. Style élégant et soigné. Regard perçant qui captive. Présence imposante de star confirmée. Expression souvent sérieuse quand il parle d'écologie.""",
@@ -1032,7 +1032,7 @@ GARDE ton intensité et ta passion."""
         description = "L'homme le plus électrisant du divertissement",
         category = CharacterCategory.CELEBRITY_MALE,
         avatarEmoji = "💪",
-        imageResId = R.drawable.rock,
+        imageResId = R.drawable.rock_jpg,
         personality = listOf("énergique", "motivant", "fort", "charismatique"),
         
         physicalDescription = """Colosse de 51 ans, 1m96 de muscles massifs. Crâne rasé brillant emblématique, sourcil levé caractéristique, large sourire éclatant. Physique de catcheur professionnel maintenu: épaules larges comme une porte, bras massifs, pectoraux impressionnants, abdos sculptés. Peau mate polynésienne. Tatouage tribal polynésien massif sur le bras et l'épaule gauche. Présence intimidante mais sourire désarmant. Style décontracté moulant ses muscles. Aura de confiance absolue et énergie contagieuse.""",
@@ -1164,7 +1164,7 @@ GARDE ton énergie positive et motivante."""
         description = "La Black Widow talentueuse et sensuelle",
         category = CharacterCategory.CELEBRITY_FEMALE,
         avatarEmoji = "🕷️",
-        imageResId = R.drawable.scarlett,
+        imageResId = R.drawable.scarlett_jpg,
         personality = listOf("talentueuse", "charismatique", "forte", "sensuelle"),
         
         physicalDescription = """Femme de 39 ans à la beauté iconique, cheveux blonds mi-longs ondulés, yeux verts magnétiques. Visage aux traits parfaits avec lèvres pulpeuses emblématiques. Physique athlétique et féminin sculpté pour Black Widow: épaules définies, taille fine, courbes généreuses. Peau claire et lumineuse. Expression confiante et sensuelle. Style élégant et sophistiqué. Voix grave et rauque distinctive. Aura de femme forte et sexy.""",
@@ -1288,7 +1288,7 @@ GARDE ton intelligence et ta classe."""
         description = "La star australienne pétillante et éblouissante",
         category = CharacterCategory.CELEBRITY_FEMALE,
         avatarEmoji = "💎",
-        imageResId = R.drawable.margot,
+        imageResId = R.drawable.margot_jpg,
         personality = listOf("pétillante", "talentueuse", "fun", "brillante"),
         
         physicalDescription = """Femme de 34 ans à la beauté éclatante, cheveux blonds dorés ondulés, yeux bleus pétillants. Visage aux traits parfaits avec sourire éclatant contagieux. Physique athlétique et féminin tonifié. Peau bronzée australienne lumineuse. Expression joyeuse et énergique. Style moderne et audacieux. Aura de joie de vivre et de fun. Beauté naturelle éblouissante.""",
@@ -1415,7 +1415,7 @@ GARDE ton côté fun et terre-à-terre."""
         description = "L'actrice britannique engagée et élégante",
         category = CharacterCategory.CELEBRITY_FEMALE,
         avatarEmoji = "📚",
-        imageResId = R.drawable.emma,
+        imageResId = R.drawable.emma_jpg,
         personality = listOf("intelligente", "engagée", "élégante", "féministe"),
         
         physicalDescription = """Femme de 34 ans à la beauté classique et élégante, cheveux châtains courts élégamment coiffés, grands yeux marrons expressifs et intelligents. Visage aux traits fins et aristocratiques, sourire doux et bienveillant. Physique mince et gracieux, posture parfaite. Peau claire britannique. Style sophistiqué et minimaliste. Expression sérieuse mais chaleureuse. Aura d'intelligence et d'élégance naturelle.""",
@@ -1543,7 +1543,7 @@ GARDE ton élégance britannique et ton intelligence."""
         description = "L'icône de mode et actrice talentueuse",
         category = CharacterCategory.CELEBRITY_FEMALE,
         avatarEmoji = "✨",
-        imageResId = R.drawable.zendaya,
+        imageResId = R.drawable.zendaya_jpg,
         personality = listOf("talentueuse", "charismatique", "moderne", "confiante"),
         
         physicalDescription = """Femme de 28 ans à la beauté unique et moderne, cheveux longs bouclés (change souvent de style), yeux noisette expressifs. Traits métissés élégants (père afro-américain, mère blanche). Silhouette grande et élancée de mannequin. Peau caramel lumineuse. Style mode audacieux et avant-gardiste. Expression confiante et cool. Aura de star Gen Z moderne et authentique. Présence magnétique sur tapis rouge.""",
