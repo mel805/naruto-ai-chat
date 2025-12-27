@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -24,7 +26,9 @@ import com.narutoai.chat.models.CharacterCategory
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CharacterSelectionScreen(
-    onCharacterSelected: (Character) -> Unit
+    onCharacterSelected: (Character) -> Unit,
+    onSettingsClick: () -> Unit = {},
+    viewModel: com.narutoai.chat.viewmodel.ChatViewModel? = null
 ) {
     var selectedCategory by remember { mutableStateOf<CharacterCategory?>(null) }
     
@@ -44,6 +48,11 @@ fun CharacterSelectionScreen(
                         text = "Naruto AI Chat",
                         fontWeight = FontWeight.Bold
                     )
+                },
+                actions = {
+                    IconButton(onClick = onSettingsClick) {
+                        Icon(Icons.Default.Settings, "Paramètres")
+                    }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer
@@ -95,7 +104,8 @@ fun CharacterSelectionScreen(
                 items(characters) { character ->
                     CharacterCard(
                         character = character,
-                        onClick = { onCharacterSelected(character) }
+                        onClick = { onCharacterSelected(character) },
+                        viewModel = viewModel
                     )
                 }
             }
@@ -135,8 +145,19 @@ fun CategoryChip(
 @Composable
 fun CharacterCard(
     character: Character,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    viewModel: com.narutoai.chat.viewmodel.ChatViewModel? = null
 ) {
+    var thumbnailUrl by remember { mutableStateOf(character.thumbnailUrl) }
+    
+    // Générer la vignette au premier affichage si elle n'existe pas
+    LaunchedEffect(character.id) {
+        if (thumbnailUrl.isEmpty() && character.physicalDescription.isNotEmpty() && viewModel != null) {
+            viewModel.generateCharacterThumbnail(character) { url ->
+                thumbnailUrl = url
+            }
+        }
+    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -150,9 +171,13 @@ fun CharacterCard(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Avatar avec image locale
+            // Avatar avec vignette Pollination AI ou image locale
             AsyncImage(
-                model = if (character.imageResId != 0) character.imageResId else character.avatarEmoji,
+                model = when {
+                    thumbnailUrl.isNotEmpty() -> thumbnailUrl
+                    character.imageResId != 0 -> character.imageResId
+                    else -> character.avatarEmoji
+                },
                 contentDescription = character.name,
                 modifier = Modifier
                     .size(80.dp)
