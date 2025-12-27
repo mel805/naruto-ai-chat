@@ -25,8 +25,8 @@ class FreeboxMediaClient {
         .build()
     
     companion object {
-        // URL Freebox avec Stable Diffusion WebUI
-        private const val FREEBOX_BASE_URL = "http://88.174.155.230:7860"
+        // URL Freebox avec Stable Diffusion WebUI - PORT 33437
+        private const val FREEBOX_BASE_URL = "http://88.174.155.230:33437"
         
         // Configuration par défaut pour images hyper-réalistes
         private const val DEFAULT_STEPS = 30
