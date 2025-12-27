@@ -18,10 +18,12 @@ import java.util.concurrent.TimeUnit
  */
 class PollinationAIClient {
     
+    // Configuration HTTP avec timeout augmenté et retry automatique
     private val client = OkHttpClient.Builder()
-        .connectTimeout(60, TimeUnit.SECONDS)
-        .readTimeout(120, TimeUnit.SECONDS)
+        .connectTimeout(60, TimeUnit.SECONDS)  // Gardé à 60s
+        .readTimeout(120, TimeUnit.SECONDS)    // Gardé à 120s
         .writeTimeout(30, TimeUnit.SECONDS)
+        .retryOnConnectionFailure(true)        // Retry automatique sur échec connexion
         .build()
     
     companion object {
@@ -53,41 +55,86 @@ class PollinationAIClient {
             // Delay LONG pour éviter rate limit 429 (augmenté à 5s)
             delay(5000)
             
-            // Pollination AI utilise une API simple par URL
-            // Format: https://image.pollinations.ai/prompt/{prompt}?width={w}&height={h}
+            // Retry avec backoff exponentiel pour gérer 502 Bad Gateway
+            var lastException: Exception? = null
+            val maxRetries = 3
             
-            // Encoder le prompt pour URL
-            val encodedPrompt = java.net.URLEncoder.encode(
-                if (enhance) enhancePrompt(prompt) else prompt,
-                "UTF-8"
-            )
-            
-            val imageUrl = buildString {
-                append(BASE_URL)
-                append("/")
-                append(encodedPrompt)
-                append("?width=$width")
-                append("&height=$height")
-                append("&model=$model")
-                append("&nologo=true") // Sans watermark
-                append("&enhance=true") // Amélioration automatique
-                // Seed unique pour éviter cache et limiter les 429
-                append("&seed=${System.currentTimeMillis()}")
-            }
-            
-            // Vérifier que l'image est accessible
-            val request = Request.Builder()
-                .url(imageUrl)
-                .head() // Juste vérifier, pas télécharger
-                .build()
-            
-            client.newCall(request).execute().use { response ->
-                if (response.isSuccessful) {
-                    Result.success(imageUrl)
-                } else {
-                    Result.failure(IOException("Erreur génération: ${response.code}"))
+            for (attempt in 1..maxRetries) {
+                try {
+                    // Pollination AI utilise une API simple par URL
+                    // Format: https://image.pollinations.ai/prompt/{prompt}?width={w}&height={h}
+                    
+                    // Encoder le prompt pour URL
+                    val encodedPrompt = java.net.URLEncoder.encode(
+                        if (enhance) enhancePrompt(prompt) else prompt,
+                        "UTF-8"
+                    )
+                    
+                    val imageUrl = buildString {
+                        append(BASE_URL)
+                        append("/")
+                        append(encodedPrompt)
+                        append("?width=$width")
+                        append("&height=$height")
+                        append("&model=$model")
+                        append("&nologo=true") // Sans watermark
+                        append("&enhance=true") // Amélioration automatique
+                        // Seed unique pour éviter cache et limiter les 429
+                        append("&seed=${System.currentTimeMillis()}")
+                    }
+                    
+                    // Vérifier que l'image est accessible avec timeout étendu
+                    val request = Request.Builder()
+                        .url(imageUrl)
+                        .head() // Juste vérifier, pas télécharger
+                        .build()
+                    
+                    client.newCall(request).execute().use { response ->
+                        when (response.code) {
+                            200 -> return@withContext Result.success(imageUrl)
+                            429 -> {
+                                // Rate limit - attendre plus longtemps
+                                if (attempt < maxRetries) {
+                                    delay(10000L * attempt) // 10s, 20s, 30s
+                                    lastException = IOException("Rate limit 429 (tentative $attempt/$maxRetries)")
+                                    // Continue to next retry
+                                } else {
+                                    return@withContext Result.failure(
+                                        IOException("❌ Rate limit 429 - Trop de requêtes. Veuillez réessayer dans 1 minute.")
+                                    )
+                                }
+                            }
+                            502, 503, 504 -> {
+                                // Bad Gateway / Service Unavailable - retry
+                                if (attempt < maxRetries) {
+                                    delay(5000L * attempt) // 5s, 10s, 15s
+                                    lastException = IOException("Erreur serveur ${response.code} (tentative $attempt/$maxRetries)")
+                                    // Continue to next retry
+                                } else {
+                                    return@withContext Result.failure(
+                                        IOException("❌ Erreur ${response.code} - Service Pollinations AI temporairement indisponible. Réessayez plus tard.")
+                                    )
+                                }
+                            }
+                            else -> {
+                                return@withContext Result.failure(
+                                    IOException("Erreur génération: HTTP ${response.code}")
+                                )
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    lastException = e
+                    if (attempt < maxRetries) {
+                        // Backoff exponentiel
+                        delay(3000L * attempt)
+                    }
                 }
             }
+            
+            // Si on arrive ici, tous les retries ont échoué
+            Result.failure(lastException ?: IOException("Échec génération après $maxRetries tentatives"))
+            
         } catch (e: Exception) {
             Result.failure(e)
         }
