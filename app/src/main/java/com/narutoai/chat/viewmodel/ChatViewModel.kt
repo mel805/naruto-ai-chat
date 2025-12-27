@@ -272,12 +272,13 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                         val source = if (usePollination) "Pollination AI" else "Freebox"
                         // Remplacer le message de statut par l'image
                         _messages.value = _messages.value.dropLast(1) + ChatMessage(
-                            content = "✅ Image générée ($source):\n$imageUrl",
-                            isUser = false
+                            content = "✅ Image générée avec succès ($source)",
+                            isUser = false,
+                            imageUrl = imageUrl
                         )
                     },
                     onFailure = { exception ->
-                        val errorMsg = "❌ Erreur génération image: ${exception.message}"
+                        val errorMsg = "❌ Erreur génération image: ${exception.message}\n\n💡 Conseil: Vérifiez votre connexion Internet."
                         _error.value = errorMsg
                         _isGeneratingImage.value = false
                         _messages.value = _messages.value.dropLast(1) + ChatMessage(

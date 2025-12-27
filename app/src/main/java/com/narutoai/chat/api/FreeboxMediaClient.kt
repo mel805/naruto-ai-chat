@@ -18,10 +18,18 @@ import java.util.concurrent.TimeUnit
  */
 class FreeboxMediaClient {
     
+    // Client principal pour génération (timeout long)
     private val client = OkHttpClient.Builder()
         .connectTimeout(60, TimeUnit.SECONDS)
         .readTimeout(300, TimeUnit.SECONDS)
         .writeTimeout(60, TimeUnit.SECONDS)
+        .build()
+    
+    // Client pour ping (timeout COURT pour ne pas bloquer l'app)
+    private val pingClient = OkHttpClient.Builder()
+        .connectTimeout(5, TimeUnit.SECONDS)
+        .readTimeout(5, TimeUnit.SECONDS)
+        .writeTimeout(5, TimeUnit.SECONDS)
         .build()
     
     companion object {
@@ -182,6 +190,7 @@ class FreeboxMediaClient {
     
     /**
      * Teste si l'API Freebox est accessible
+     * Utilise un timeout COURT (5s) pour ne pas bloquer l'app
      */
     suspend fun ping(): Result<Boolean> = withContext(Dispatchers.IO) {
         try {
@@ -190,7 +199,8 @@ class FreeboxMediaClient {
                 .get()
                 .build()
             
-            client.newCall(request).execute().use { response ->
+            // Utiliser pingClient avec timeout court (5s)
+            pingClient.newCall(request).execute().use { response ->
                 Result.success(response.isSuccessful)
             }
         } catch (e: Exception) {
