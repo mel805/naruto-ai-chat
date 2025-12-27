@@ -273,8 +273,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                         // Remplacer le message de statut par l'image
                         _messages.value = _messages.value.dropLast(1) + ChatMessage(
                             content = "✅ Image générée avec succès ($source)",
-                            isUser = false,
-                            imageUrl = imageUrl
+                            isUser = false
                         )
                     },
                     onFailure = { exception ->
